@@ -7,6 +7,11 @@ This repo provides all relevant materials for `HC32M120` series Cortex M0+ MCU
 - [x] [CMSIS Pack](https://github.com/hdscmcu/hc32m120/tree/master/CMSISPack) provides pack info for IAR(8.4) and MDK IDE.
 - [ ] ...
 
+|PACKAGE|PHOTO|
+|--|-|
+|LQFP48|[![](https://github.com/levizh/images/blob/master/HC32M120_STK_48_logo.png "STK_HC32M120_LQFP48_050")](https://github.com/hdscmcu/hc32m120/)
+
+
 To be continued...
 
 Thank `You`!:blush:
