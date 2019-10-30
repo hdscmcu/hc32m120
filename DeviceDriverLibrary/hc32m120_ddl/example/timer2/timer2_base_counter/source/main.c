@@ -261,7 +261,7 @@ static void Timer2Config(void)
     TIMER2_SetTrigEvent(TIMER2_SYNC_CLK_EVENT);
 #else
     /* 5. Set the specified pin as TRIGA input pin. */
-    GPIO_SetFunc(TIMER2_TRIGA_PORT, TIMER2_TRIGA_PIN, GPIO_FUNC_CMP);
+    GPIO_SetFunc(TIMER2_TRIGA_PORT, TIMER2_TRIGA_PIN, GPIO_FUNC_3_TIM2);
 #endif // #if (TIMER2_SYNC_CLK == SYNC_CLK_EVENT)
 
 #if TIMER2_USE_INTERRUPT
