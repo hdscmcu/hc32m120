@@ -9,7 +9,7 @@ This repo provides all relevant materials for `HC32M120` series Cortex M0+ MCU
 
 |PACKAGE|PHOTO|
 |--|-|
-|LQFP48|[![](https://github.com/levizh/images/blob/master/HC32M120_STK_48_logo.png "STK_HC32M120_LQFP48_050")](https://github.com/hdscmcu/hc32m120/)
+|LQFP48|[![](https://gitee.com/hdscmcu/images/raw/master/HC32M120_STK_48_logo.png "STK_HC32M120_LQFP48_050")](https://github.com/hdscmcu/hc32m120/)
 
 
 To be continued...
