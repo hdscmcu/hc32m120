@@ -1,4 +1,7 @@
 version     date            comment
- 1.0.0      Oct  22, 2019   1. the first release for hc32m120 series DDL(Device Driver Library)
+ 1.0.0      Nov 04, 2019    1. TX empty interrupt IRQ callback disable TX empyt interrupt 
+                               when buffer data is empty for UART interrupt sample.[usart];
+
+            Oct  22, 2019   1. the first release for hc32m120 series DDL(Device Driver Library)
 
 EOF
