@@ -1947,16 +1947,16 @@
     </file>
     -->
     <file>
-      <name>$PROJ_DIR$\..\..\..\..\driver\src\hc32m120_icg.c</name>
-    </file>
-    <file>
       <name>$PROJ_DIR$\..\..\..\..\driver\src\hc32m120_gpio.c</name>
     </file>
     <file>
-      <name>$PROJ_DIR$\..\..\..\..\driver\src\hc32m120_utility.c</name>
+      <name>$PROJ_DIR$\..\..\..\..\driver\src\hc32m120_rmu.c</name>
     </file>
     <file>
-      <name>$PROJ_DIR$\..\..\..\..\driver\src\hc32m120_rmu.c</name>
+      <name>$PROJ_DIR$\..\..\..\..\driver\src\hc32m120_icg.c</name>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\..\..\..\..\driver\src\hc32m120_utility.c</name>
     </file>
 
   </group>

@@ -150,7 +150,7 @@
             <RestoreSysVw>1</RestoreSysVw>
           </Target>
           <RunDebugAfterBuild>0</RunDebugAfterBuild>
-          <TargetSelection>6</TargetSelection>
+          <TargetSelection>12</TargetSelection>
           <SimDlls>
             <CpuDll></CpuDll>
             <CpuDllArguments></CpuDllArguments>
@@ -164,7 +164,7 @@
             <PeripheralDll></PeripheralDll>
             <PeripheralDllArguments></PeripheralDllArguments>
             <InitializationFile></InitializationFile>
-            <Driver>Segger\JL2CM3.dll</Driver>
+            <Driver>BIN\CMSIS_AGDI.dll</Driver>
           </TargetDlls>
         </DebugOption>
         <Utilities>
@@ -450,29 +450,29 @@
             </File>
             -->
             <File>
-<FileName>hc32m120_gpio.c</FileName>
-<FileType>1</FileType><FilePath>..\..\..\..\driver\src\hc32m120_gpio.c</FilePath></File>
-<File>
-<FileName>hc32m120_dma.c</FileName>
-<FileType>1</FileType><FilePath>..\..\..\..\driver\src\hc32m120_dma.c</FilePath></File>
-<File>
-<FileName>hc32m120_icg.c</FileName>
-<FileType>1</FileType><FilePath>..\..\..\..\driver\src\hc32m120_icg.c</FilePath></File>
-<File>
-<FileName>hc32m120_utility.c</FileName>
-<FileType>1</FileType><FilePath>..\..\..\..\driver\src\hc32m120_utility.c</FilePath></File>
+<FileName>hc32m120_clk.c</FileName>
+<FileType>1</FileType><FilePath>..\..\..\..\driver\src\hc32m120_clk.c</FilePath></File>
 <File>
 <FileName>hc32m120_spi.c</FileName>
 <FileType>1</FileType><FilePath>..\..\..\..\driver\src\hc32m120_spi.c</FilePath></File>
 <File>
-<FileName>hc32m120_clk.c</FileName>
-<FileType>1</FileType><FilePath>..\..\..\..\driver\src\hc32m120_clk.c</FilePath></File>
+<FileName>hc32m120_utility.c</FileName>
+<FileType>1</FileType><FilePath>..\..\..\..\driver\src\hc32m120_utility.c</FilePath></File>
+<File>
+<FileName>hc32m120_interrupts.c</FileName>
+<FileType>1</FileType><FilePath>..\..\..\..\driver\src\hc32m120_interrupts.c</FilePath></File>
+<File>
+<FileName>hc32m120_dma.c</FileName>
+<FileType>1</FileType><FilePath>..\..\..\..\driver\src\hc32m120_dma.c</FilePath></File>
+<File>
+<FileName>hc32m120_gpio.c</FileName>
+<FileType>1</FileType><FilePath>..\..\..\..\driver\src\hc32m120_gpio.c</FilePath></File>
 <File>
 <FileName>hc32m120_efm.c</FileName>
 <FileType>1</FileType><FilePath>..\..\..\..\driver\src\hc32m120_efm.c</FilePath></File>
 <File>
-<FileName>hc32m120_interrupts.c</FileName>
-<FileType>1</FileType><FilePath>..\..\..\..\driver\src\hc32m120_interrupts.c</FilePath></File>
+<FileName>hc32m120_icg.c</FileName>
+<FileType>1</FileType><FilePath>..\..\..\..\driver\src\hc32m120_icg.c</FilePath></File>
 
     </Files>
   </Group>
@@ -636,7 +636,7 @@
             <RestoreSysVw>1</RestoreSysVw>
           </Target>
           <RunDebugAfterBuild>0</RunDebugAfterBuild>
-          <TargetSelection>6</TargetSelection>
+          <TargetSelection>12</TargetSelection>
           <SimDlls>
             <CpuDll></CpuDll>
             <CpuDllArguments></CpuDllArguments>
@@ -650,7 +650,7 @@
             <PeripheralDll></PeripheralDll>
             <PeripheralDllArguments></PeripheralDllArguments>
             <InitializationFile></InitializationFile>
-            <Driver>Segger\JL2CM3.dll</Driver>
+            <Driver>BIN\CMSIS_AGDI.dll</Driver>
           </TargetDlls>
         </DebugOption>
         <Utilities>
@@ -936,29 +936,29 @@
             </File>
             -->
             <File>
-<FileName>hc32m120_gpio.c</FileName>
-<FileType>1</FileType><FilePath>..\..\..\..\driver\src\hc32m120_gpio.c</FilePath></File>
-<File>
-<FileName>hc32m120_dma.c</FileName>
-<FileType>1</FileType><FilePath>..\..\..\..\driver\src\hc32m120_dma.c</FilePath></File>
-<File>
-<FileName>hc32m120_icg.c</FileName>
-<FileType>1</FileType><FilePath>..\..\..\..\driver\src\hc32m120_icg.c</FilePath></File>
-<File>
-<FileName>hc32m120_utility.c</FileName>
-<FileType>1</FileType><FilePath>..\..\..\..\driver\src\hc32m120_utility.c</FilePath></File>
+<FileName>hc32m120_clk.c</FileName>
+<FileType>1</FileType><FilePath>..\..\..\..\driver\src\hc32m120_clk.c</FilePath></File>
 <File>
 <FileName>hc32m120_spi.c</FileName>
 <FileType>1</FileType><FilePath>..\..\..\..\driver\src\hc32m120_spi.c</FilePath></File>
 <File>
-<FileName>hc32m120_clk.c</FileName>
-<FileType>1</FileType><FilePath>..\..\..\..\driver\src\hc32m120_clk.c</FilePath></File>
+<FileName>hc32m120_utility.c</FileName>
+<FileType>1</FileType><FilePath>..\..\..\..\driver\src\hc32m120_utility.c</FilePath></File>
+<File>
+<FileName>hc32m120_interrupts.c</FileName>
+<FileType>1</FileType><FilePath>..\..\..\..\driver\src\hc32m120_interrupts.c</FilePath></File>
+<File>
+<FileName>hc32m120_dma.c</FileName>
+<FileType>1</FileType><FilePath>..\..\..\..\driver\src\hc32m120_dma.c</FilePath></File>
+<File>
+<FileName>hc32m120_gpio.c</FileName>
+<FileType>1</FileType><FilePath>..\..\..\..\driver\src\hc32m120_gpio.c</FilePath></File>
 <File>
 <FileName>hc32m120_efm.c</FileName>
 <FileType>1</FileType><FilePath>..\..\..\..\driver\src\hc32m120_efm.c</FilePath></File>
 <File>
-<FileName>hc32m120_interrupts.c</FileName>
-<FileType>1</FileType><FilePath>..\..\..\..\driver\src\hc32m120_interrupts.c</FilePath></File>
+<FileName>hc32m120_icg.c</FileName>
+<FileType>1</FileType><FilePath>..\..\..\..\driver\src\hc32m120_icg.c</FilePath></File>
 
     </Files>
   </Group>

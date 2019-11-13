@@ -1947,13 +1947,7 @@
     </file>
     -->
     <file>
-      <name>$PROJ_DIR$\..\..\..\..\driver\src\hc32m120_gpio.c</name>
-    </file>
-    <file>
-      <name>$PROJ_DIR$\..\..\..\..\driver\src\hc32m120_icg.c</name>
-    </file>
-    <file>
-      <name>$PROJ_DIR$\..\..\..\..\driver\src\hc32m120_timerb.c</name>
+      <name>$PROJ_DIR$\..\..\..\..\driver\src\hc32m120_clk.c</name>
     </file>
     <file>
       <name>$PROJ_DIR$\..\..\..\..\driver\src\hc32m120_utility.c</name>
@@ -1962,10 +1956,16 @@
       <name>$PROJ_DIR$\..\..\..\..\driver\src\hc32m120_pwc.c</name>
     </file>
     <file>
-      <name>$PROJ_DIR$\..\..\..\..\driver\src\hc32m120_clk.c</name>
+      <name>$PROJ_DIR$\..\..\..\..\driver\src\hc32m120_timerb.c</name>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\..\..\..\..\driver\src\hc32m120_gpio.c</name>
     </file>
     <file>
       <name>$PROJ_DIR$\..\..\..\..\driver\src\hc32m120_cmp.c</name>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\..\..\..\..\driver\src\hc32m120_icg.c</name>
     </file>
 
   </group>
