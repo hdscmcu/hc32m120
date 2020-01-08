@@ -7,6 +7,7 @@
    Change Logs:
    Date             Author          Notes
    2019-06-22       Zhangxl         First version
+   2020-01-03       Zhangxl         Comment revise for SetFunc API
  @endverbatim
  *******************************************************************************
  * Copyright (C) 2016, Huada Semiconductor Co., Ltd. All rights reserved.
@@ -391,7 +392,7 @@ void GPIO_DebugPortSetting(uint8_t u8DebugPort, en_functional_state_t enNewState
 }
 
 /**
- * @brief  Read specified GPIO input data port pin
+ * @brief  Set specified Port Pin function
  * @param  [in] u8Port: GPIO_PORT_x, x can be (0~7, 12~14) to select the GPIO peripheral
  * @param  [in] u8Pin: GPIO_PIN_x, x can be (0~7) to select the PIN index
  * @param  [in] u8Func: GPIO_FUNC_x, x can be selected from GPIO function definitions

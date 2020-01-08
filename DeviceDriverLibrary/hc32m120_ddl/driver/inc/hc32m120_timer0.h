@@ -7,6 +7,7 @@
    Change Logs:
    Date             Author          Notes
    2019-06-20       Heqb          First version
+   2019-12-11       Heqb          Add timeout function for register write
  @endverbatim
  *******************************************************************************
  * Copyright (C) 2016, Huada Semiconductor Co., Ltd. All rights reserved.
@@ -191,17 +192,17 @@ typedef struct
 
 en_result_t TIMER0_StructInit(stc_tim0_init_t* pstcInitStruct);
 en_result_t TIMER0_Init(const stc_tim0_init_t* pstcBaseInit);
-void TIMER0_DeInit(void);
+en_result_t TIMER0_DeInit(void);
 
-void TIMER0_Cmd(en_functional_state_t enNewState);
-void TIMER0_IntCmd(en_functional_state_t enNewState);
+en_result_t TIMER0_Cmd(en_functional_state_t enNewState);
+en_result_t TIMER0_IntCmd(en_functional_state_t enNewState);
 
 en_flag_status_t TIMER0_GetFlag(void);
-void TIMER0_ClearFlag(void);
+en_result_t TIMER0_ClearFlag(void);
 uint16_t TIMER0_GetCntReg(void);
-void TIMER0_WriteCntReg(uint16_t u16Cnt);
+en_result_t TIMER0_WriteCntReg(uint16_t u16Cnt);
 uint16_t TIMER0_GetCmpReg(void);
-void TIMER0_WriteCmpReg(uint16_t u16Cnt);
+en_result_t TIMER0_WriteCmpReg(uint16_t u16Cnt);
 
 void TIMER0_SetTriggerSrc(en_event_src_t enEvent);
 

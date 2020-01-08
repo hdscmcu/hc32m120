@@ -1,14 +1,18 @@
 version     date            comment
  1.0.0      
-            Jan  08, 2020   1. Added GCC compiler support.
-                            2. Added Eclipse project files for each example project.
-                            3. Modified the type of 'u32Event0' in structure stc_adc_trg_cfg_t,
-                               from 'uint32 enEvent0' to 'en_event_src_t enEvent0'. Same with 'u32Event1'.
-                            4. Modified the definitions of ADC_Trigger_Source_Type.
+            Jan 08, 2020   1. Added GCC compiler support.
+                           2. Added Eclipse project files for each example project.
+                           3. Modified the type of 'u32Event0' in structure stc_adc_trg_cfg_t,
+                              from 'uint32 enEvent0' to 'en_event_src_t enEvent0'. Same with 'u32Event1'.
+                           4. Modified the definitions of ADC_Trigger_Source_Type.
 
-            Nov 04, 2019    1. TX empty interrupt IRQ callback disable TX empyt interrupt 
+            Jan 03, 2020   1. comment revise for gpio driver
+
+            Dec 11, 2019   1. Add timeout function for timer0
+
+            Nov 04, 2019   1. TX empty interrupt IRQ callback disable TX empyt interrupt 
                                when buffer data is empty for UART interrupt sample.[usart];
 
-            Oct  22, 2019   1. the first release for hc32m120 series DDL(Device Driver Library)
+            Oct 22, 2019   1. the first release for hc32m120 series DDL(Device Driver Library)
 
 EOF
