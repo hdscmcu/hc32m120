@@ -6,6 +6,7 @@
    Change Logs:
    Date             Author          Notes
    2019-06-28       Yangjp          First version
+   2020-01-08       Wuze            Added function '_write' for printf in GCC compiler.
  @endverbatim
  *******************************************************************************
  * Copyright (C) 2016, Huada Semiconductor Co., Ltd. All rights reserved.
@@ -249,6 +250,21 @@ __WEAKDEF void DDL_AssertHandler(const uint8_t *file, int16_t line)
  * @param  [in] f
  * @retval int32_t
  */
+#if defined ( __GNUC__ ) && !defined (__CC_ARM)
+int _write(int fd, char *pBuffer, int size)
+{
+    for (int i = 0; i < size; i++)
+    {
+        while (!READ_REG32_BIT(M0P_USART2->SR, USART_SR_TXE))
+        {
+            ;
+        }
+
+        WRITE_REG32(M0P_USART2->DR,  ((uint32_t)pBuffer[i] & 0x01FFul));
+    }
+    return size;
+}
+#else
 int32_t fputc(int32_t ch, FILE *f)
 {
     /* Wait TX data register empty */
@@ -261,6 +277,7 @@ int32_t fputc(int32_t ch, FILE *f)
 
     return (ch);
 }
+#endif
 
 /**
  * @brief  Initialize UART for debug printf function

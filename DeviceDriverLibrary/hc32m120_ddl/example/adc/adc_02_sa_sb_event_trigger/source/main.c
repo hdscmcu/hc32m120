@@ -7,6 +7,8 @@
    Date             Author          Notes
    2019-06-13       Wuze            First version
    2019-10-21       Wuze            Modified the macro name of the trigger pin of sequence B.
+   2020-01-08       Wuze            Modified the type of 'u32Event0' in structure stc_adc_trg_cfg_t,
+                                    from 'uint32 enEvent0' to 'en_event_src_t enEvent0'. Same with 'u32Event1'.
  @endverbatim
  *******************************************************************************
  * Copyright (C) 2016, Huada Semiconductor Co., Ltd. All rights reserved.
@@ -303,7 +305,7 @@ static void AdcTriggerConfig(void)
     /* Modify the value depends on the application.
        The trigger source of sequence B is not recommended to be set to ADC_TRGSRC_EX_PIN at here. */
     stcTrgCfg.u16TrgSrc = ADC_TRGSRC_IN_EVT0;
-    stcTrgCfg.u32Event0 = SB_TRIGGER_EVENT;
+    stcTrgCfg.enEvent0  = SB_TRIGGER_EVENT;
     /* 1. Enable AOS */
     CLK_FcgPeriphClockCmd(CLK_FCG_AOS, Enable);
     /* 2. Configrues the trigger source of sequence B. */

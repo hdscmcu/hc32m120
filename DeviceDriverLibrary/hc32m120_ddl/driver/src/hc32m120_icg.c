@@ -7,6 +7,7 @@
    Change Logs:
    Date             Author          Notes
    2019-06-24       Yangjp          First version
+   2020-01-08       Wuze            Added GCC compiler support for the definition of u32ICG.
  @endverbatim
  *******************************************************************************
  * Copyright (C) 2016, Huada Semiconductor Co., Ltd. All rights reserved.
@@ -91,7 +92,9 @@
 /**
  * @brief ICG parameters configuration
  */
-#if defined (__CC_ARM)
+#if defined ( __GNUC__ ) && !defined (__CC_ARM) /*!< GNU Compiler */
+const uint32_t u32ICG[] __attribute__((section(".icg_sec"))) =
+#elif defined (__CC_ARM)
 const uint32_t u32ICG[] __attribute__((at(0xC0))) =
 #elif defined (__ICCARM__)
 __root const uint32_t u32ICG[] @ 0xC0 =

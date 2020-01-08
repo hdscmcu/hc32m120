@@ -7,6 +7,9 @@
    Change Logs:
    Date             Author          Notes
    2019-06-09       Wuze            First version
+   2020-01-08       Wuze            1. Modified the type of 'u32Event0' in structure stc_adc_trg_cfg_t,
+                                       from 'uint32 enEvent0' to 'en_event_src_t enEvent0'. Same with 'u32Event1'.
+                                    2. Modified the definitions of @ref ADC_Trigger_Source_Type
  @endverbatim
  *******************************************************************************
  * Copyright (C) 2016, Huada Semiconductor Co., Ltd. All rights reserved.
@@ -114,8 +117,8 @@ typedef struct
 {
     uint16_t u16TrgSrc;         /*!< Specifies the trigger source type for the specified sequence.
                                      This parameter can be a value of @ref ADC_Trigger_Source_Type */
-    uint32_t u32Event0;         /*!< An @ref en_event_src_t enumeration value. */
-    uint32_t u32Event1;         /*!< An @ref en_event_src_t enumeration value. */
+    en_event_src_t enEvent0;    /*!< An @ref en_event_src_t enumeration value. */
+    en_event_src_t enEvent1;    /*!< An @ref en_event_src_t enumeration value. */
 } stc_adc_trg_cfg_t;
 
 /**
@@ -233,11 +236,11 @@ typedef struct
  * @defgroup ADC_Trigger_Source_Type ADC Trigger Source Type
  * @{
  */
-#define ADC_TRGSRC_MASK             ((uint16_t)0x3u)
+#define ADC_TRGSRC_MASK             (ADC_TRGSR_TRGSELA)
 #define ADC_TRGSRC_EX_PIN           ((uint16_t)0x0u)
-#define ADC_TRGSRC_IN_EVT0          ((uint16_t)0x1u)
-#define ADC_TRGSRC_IN_EVT1          ((uint16_t)0x2u)
-#define ADC_TRGSRC_IN_EVT0_EVT1     ((uint16_t)0x3u)
+#define ADC_TRGSRC_IN_EVT0          (ADC_TRGSR_TRGSELA_0)
+#define ADC_TRGSRC_IN_EVT1          (ADC_TRGSR_TRGSELA_1)
+#define ADC_TRGSRC_IN_EVT0_EVT1     (ADC_TRGSR_TRGSELA_0 | ADC_TRGSR_TRGSELA_1)
 /**
  * @}
  */

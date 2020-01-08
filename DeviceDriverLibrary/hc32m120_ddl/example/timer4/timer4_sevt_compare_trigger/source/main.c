@@ -7,6 +7,8 @@
    Change Logs:
    Date             Author          Notes
    2019-06-25       Hongjh          First version
+   2020-01-08       Wuze            Modified the type of 'u32Event0' in structure stc_adc_trg_cfg_t,
+                                    from 'uint32 enEvent0' to 'en_event_src_t enEvent0'. Same with 'u32Event1'.
  @endverbatim
  *******************************************************************************
  * Copyright (C) 2016, Huada Semiconductor Co., Ltd. All rights reserved.
@@ -279,7 +281,7 @@ static void AdcTriggerConfig(void)
     u8Seq = ADC_SEQ_B;
     /* The trigger source of sequence B is not recommended to be set to ADC_TRGSRC_EX_PIN at here. */
     stcTrgCfg.u16TrgSrc = ADC_TRGSRC_IN_EVT0;
-    stcTrgCfg.u32Event0 = EVT_TMR4_SCMWL;
+    stcTrgCfg.enEvent0  = EVT_TMR4_SCMWL;
 
     /* 1. Configrues the trigger source of sequence B. */
     ADC_ConfigTriggerSrc(u8Seq, &stcTrgCfg);

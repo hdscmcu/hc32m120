@@ -6,6 +6,7 @@
    Change Logs:
    Date             Author          Notes
    2019-06-28       Yangjp          First version
+   2020-01-08       Wuze            Added compiler macro definitions for GCC.
  @endverbatim
  *******************************************************************************
  * Copyright (C) 2016, Huada Semiconductor Co., Ltd. All rights reserved.
@@ -166,15 +167,34 @@ typedef enum
 /**
  * @brief Compiler Macro Definitions
  */
-#if defined (__ICCARM__)                /*!< IAR Compiler */
+#if defined ( __GNUC__ ) && !defined (__CC_ARM) /*!< GNU Compiler */
+  #ifndef __WEAKDEF
+    #define __WEAKDEF                   __attribute__((weak))
+  #endif /* __WEAKDEF */
+  #ifndef __ALIGN_BEGIN
+    #define __ALIGN_BEGIN               __attribute__((aligned (4)))
+  #endif /* __ALIGN_BEGIN */
+  #ifndef __NOINLINE
+    #define __NOINLINE                  __attribute__((noinline))
+  #endif /* __NOINLINE */
+  #ifndef __UNUSED
+    #define __UNUSED                    __attribute__((unused))
+  #endif /* __UNUSED */
+  #ifndef __RAM_FUNC
+    #define __RAM_FUNC                  __attribute__((long_call, section(".ramfunc")))
+    /* Usage: void __RAM_FUNC foo(void) */
+  #endif /* __RAM_FUNC */
+#elif defined (__ICCARM__)                /*!< IAR Compiler */
     #define __WEAKDEF                   __weak
     #define __ALIGN_BEGIN               _Pragma("data_alignment=4")
     #define __NOINLINE                  _Pragma("optimize = no_inline")
+    #define __UNUSED                    __attribute__((unused))
     #define __RAM_FUNC                  __ramfunc
 #elif defined (__CC_ARM)                /*!< ARM Compiler */
     #define __WEAKDEF                   __attribute__((weak))
     #define __ALIGN_BEGIN               __align(4)
     #define __NOINLINE                  __attribute__((noinline))
+    #define __UNUSED                    __attribute__((unused))
     /* RAM functions are defined using the toolchain options.
     Functions that are executed in RAM should reside in a separate source module.
     Using the 'Options for File' dialog you can simply change the 'Code / Const'

@@ -7,6 +7,8 @@
    Change Logs:
    Date             Author          Notes
    2019-06-09       Wuze            First version
+   2020-01-08       Wuze            Modified the type of 'u32Event0' in structure stc_adc_trg_cfg_t,
+                                    from 'uint32 enEvent0' to 'en_event_src_t enEvent0'. Same with 'u32Event1'.
  @endverbatim
  *******************************************************************************
  * Copyright (C) 2016, Huada Semiconductor Co., Ltd. All rights reserved.
@@ -462,29 +464,29 @@ en_result_t ADC_ConfigTriggerSrc(uint8_t u8Seq, const stc_adc_trg_cfg_t *pstcTrg
         if (u8Seq == ADC_SEQ_A)
         {
             u8Offset = 0u;
-            DDL_ASSERT(IS_ADC_SA_TRIGGER_EVT(pstcTrgCfg->u32Event0));
-            DDL_ASSERT(IS_ADC_SA_TRIGGER_EVT(pstcTrgCfg->u32Event1));
+            DDL_ASSERT(IS_ADC_SA_TRIGGER_EVT(pstcTrgCfg->enEvent0));
+            DDL_ASSERT(IS_ADC_SA_TRIGGER_EVT(pstcTrgCfg->enEvent1));
         }
         else
         {
             u8Offset = 8u;
-            DDL_ASSERT(IS_ADC_SB_TRIGGER_EVT(pstcTrgCfg->u32Event0));
-            DDL_ASSERT(IS_ADC_SB_TRIGGER_EVT(pstcTrgCfg->u32Event1));
+            DDL_ASSERT(IS_ADC_SB_TRIGGER_EVT(pstcTrgCfg->enEvent0));
+            DDL_ASSERT(IS_ADC_SB_TRIGGER_EVT(pstcTrgCfg->enEvent1));
         }
 
         switch (pstcTrgCfg->u16TrgSrc)
         {
             case ADC_TRGSRC_IN_EVT0:
-                ADC_TRG_EVT0_REG = pstcTrgCfg->u32Event0;
+                ADC_TRG_EVT0_REG = (uint32_t)pstcTrgCfg->enEvent0;
                 break;
 
             case ADC_TRGSRC_IN_EVT1:
-                ADC_TRG_EVT1_REG = pstcTrgCfg->u32Event1;
+                ADC_TRG_EVT1_REG = (uint32_t)pstcTrgCfg->enEvent1;
                 break;
 
             case ADC_TRGSRC_IN_EVT0_EVT1:
-                ADC_TRG_EVT0_REG = pstcTrgCfg->u32Event0;
-                ADC_TRG_EVT1_REG = pstcTrgCfg->u32Event1;
+                ADC_TRG_EVT0_REG = (uint32_t)pstcTrgCfg->enEvent0;
+                ADC_TRG_EVT1_REG = (uint32_t)pstcTrgCfg->enEvent1;
                 break;
 
             default:
@@ -515,8 +517,8 @@ en_result_t ADC_TriggerSrcStructInit(stc_adc_trg_cfg_t *pstcTrgCfg)
     if (pstcTrgCfg != NULL)
     {
         pstcTrgCfg->u16TrgSrc = ADC_TRGSRC_IN_EVT0;
-        pstcTrgCfg->u32Event0 = EVT_AOS_STRG;
-        pstcTrgCfg->u32Event1 = EVT_AOS_STRG;
+        pstcTrgCfg->enEvent0  = EVT_AOS_STRG;
+        pstcTrgCfg->enEvent1  = EVT_AOS_STRG;
 
         enRet = Ok;
     }
