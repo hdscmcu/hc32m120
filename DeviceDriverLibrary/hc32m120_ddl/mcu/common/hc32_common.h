@@ -7,6 +7,9 @@
    Date             Author          Notes
    2019-06-28       Yangjp          First version
    2020-01-08       Wuze            Added compiler macro definitions for GCC.
+   2020-01-20       Yangjp          Modify the macro definition of CLEAR_REG.
+   2020-02-14       Zhangxl         Sync 'Compiler Macro Definitions' with other 
+                                    series.
  @endverbatim
  *******************************************************************************
  * Copyright (C) 2016, Huada Semiconductor Co., Ltd. All rights reserved.
@@ -167,6 +170,10 @@ typedef enum
 /**
  * @brief Compiler Macro Definitions
  */
+#ifndef __UNUSED
+  #define __UNUSED                      __attribute__((unused))
+#endif /* __UNUSED */
+
 #if defined ( __GNUC__ ) && !defined (__CC_ARM) /*!< GNU Compiler */
   #ifndef __WEAKDEF
     #define __WEAKDEF                   __attribute__((weak))
@@ -177,24 +184,33 @@ typedef enum
   #ifndef __NOINLINE
     #define __NOINLINE                  __attribute__((noinline))
   #endif /* __NOINLINE */
-  #ifndef __UNUSED
-    #define __UNUSED                    __attribute__((unused))
-  #endif /* __UNUSED */
   #ifndef __RAM_FUNC
     #define __RAM_FUNC                  __attribute__((long_call, section(".ramfunc")))
     /* Usage: void __RAM_FUNC foo(void) */
   #endif /* __RAM_FUNC */
 #elif defined (__ICCARM__)                /*!< IAR Compiler */
+  #ifndef __WEAKDEF
     #define __WEAKDEF                   __weak
+  #endif /* __WEAKDEF */    
+  #ifndef __ALIGN_BEGIN  
     #define __ALIGN_BEGIN               _Pragma("data_alignment=4")
+  #endif /* __ALIGN_BEGIN */
+  #ifndef __NOINLINE
     #define __NOINLINE                  _Pragma("optimize = no_inline")
-    #define __UNUSED                    __attribute__((unused))
+  #endif /* __NOINLINE */
+  #ifndef __RAM_FUNC
     #define __RAM_FUNC                  __ramfunc
+  #endif /* __RAM_FUNC */
 #elif defined (__CC_ARM)                /*!< ARM Compiler */
+  #ifndef __WEAKDEF
     #define __WEAKDEF                   __attribute__((weak))
+  #endif /* __WEAKDEF */    
+  #ifndef __ALIGN_BEGIN  
     #define __ALIGN_BEGIN               __align(4)
+  #endif /* __ALIGN_BEGIN */
+  #ifndef __NOINLINE
     #define __NOINLINE                  __attribute__((noinline))
-    #define __UNUSED                    __attribute__((unused))
+  #endif /* __NOINLINE */
     /* RAM functions are defined using the toolchain options.
     Functions that are executed in RAM should reside in a separate source module.
     Using the 'Options for File' dialog you can simply change the 'Code / Const'
@@ -254,9 +270,9 @@ typedef enum
 #define READ_REG32_BIT(REG, BIT)        ((REG) & ((uint32_t)(BIT)))
 
 /* Specificed register bit width */
-#define CLEAR_REG8(REG, BIT)            ((REG) = ((uint8_t)(0u)))
-#define CLEAR_REG16(REG, BIT)           ((REG) = ((uint16_t)(0u)))
-#define CLEAR_REG32(REG, BIT)           ((REG) = ((uint32_t)(0ul)))
+#define CLEAR_REG8(REG)                 ((REG) = ((uint8_t)(0u)))
+#define CLEAR_REG16(REG)                ((REG) = ((uint16_t)(0u)))
+#define CLEAR_REG32(REG)                ((REG) = ((uint32_t)(0ul)))
 
 /* Specificed register bit width */
 #define WRITE_REG8(REG, VAL)            ((REG) = ((uint8_t)(VAL)))

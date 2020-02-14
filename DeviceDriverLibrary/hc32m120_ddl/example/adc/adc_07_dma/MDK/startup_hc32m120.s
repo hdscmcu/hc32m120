@@ -45,7 +45,7 @@
 ;/*  Startup for ARM                                                          */
 ;/*  Version     V1.0                                                         */
 ;/*  Date        2019-04-11                                                   */
-;/*  Target-mcu  HC32F120                                                     */
+;/*  Target-mcu  HC32M120                                                     */
 ;/*****************************************************************************/
 
 ; Stack Configuration

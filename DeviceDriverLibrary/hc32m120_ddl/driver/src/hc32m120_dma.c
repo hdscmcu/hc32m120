@@ -7,6 +7,8 @@
    Change Logs:
    Date             Author          Notes
    2019-07-08       Chengy          First version
+   2020-02-13       Chengy          Modified register INTCLR1 to INTCLR0 in 
+                                    function DMA_ClearErrFlag()
  @endverbatim
  *******************************************************************************
  * Copyright (C) 2016, Huada Semiconductor Co., Ltd. All rights reserved.
@@ -519,7 +521,7 @@ void DMA_ClearErrFlag(uint8_t u8Ch, uint32_t u32Flag)
     DDL_ASSERT(IS_VALID_DMA_CH(u8Ch));
     DDL_ASSERT(IS_VALID_DMA_ERR_FLAG(u32Flag));
 
-    SET_BIT(M0P_DMA->INTCLR1, (u32Flag << u8Ch));
+    SET_BIT(M0P_DMA->INTCLR0, (u32Flag << u8Ch));
 }
 
 /**

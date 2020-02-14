@@ -1,5 +1,17 @@
-version     date            comment
- 1.0.0      
+version     date           comment
+ 1.0.0
+            Feb 14, 2020   1. Modify EFM_InterruptCmd function for efm.c.
+                           2. Replace the ddl_config.h for CRC.
+                           3. Use CLEAR_REG8_BIT for CLK_ClearXtalStdFlag() instead of CLEAR_REG8_BIT.
+                           4. Comment revise for dma/interrupt/startup.s.
+                           5. Modified register INTCLR1 to INTCLR0 in  function DMA_ClearErrFlag().
+                           6. Sync 'Compiler Macro Definitions' with other series.
+
+            Jan 22, 2020   1. Modify exclusive IRQ request process for share handler
+            
+            Jan 20, 2020   1. Modify the macro definition of CLEAR_REG.
+                           2. Add the macro definition of __UNUSED.
+
             Jan 08, 2020   1. Added GCC compiler support.
                            2. Added Eclipse project files for each example project.
                            3. Modified the type of 'u32Event0' in structure stc_adc_trg_cfg_t,

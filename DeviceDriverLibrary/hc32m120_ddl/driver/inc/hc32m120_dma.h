@@ -7,6 +7,7 @@
    Change Logs:
    Date             Author          Notes
    2019-07-08       Chengy          First version
+   2020-02-13       Chengy          Fixed spelling error and format in comment
  @endverbatim
  *******************************************************************************
  * Copyright (C) 2016, Huada Semiconductor Co., Ltd. All rights reserved.
@@ -145,7 +146,7 @@ typedef struct
  * @{
  */
 #define DMA_CHANNEL_ENABLE          (DMA_CHEN_CHEN_0)         /*!< DMA channel 0 enable      */
-#define DMA_CHANNEL_DISABLE         ((uint32_t)0x00000000ul)   /*!< DMA channel disable       */
+#define DMA_CHANNEL_DISABLE         ((uint32_t)0x00000000ul)  /*!< DMA channel disable       */
 /**
  * @}
  */
@@ -199,7 +200,7 @@ typedef struct
  * @defgroup DMA_DataWidth DMA transfer data width
  * @{
  */
-#define DMA_DATAWIDTH_8BIT          ((uint32_t)0x00000000ul)   /*!< DMA transfer data width 8bit       */
+#define DMA_DATAWIDTH_8BIT          ((uint32_t)0x00000000ul)  /*!< DMA transfer data width 8bit       */
 #define DMA_DATAWIDTH_16BIT         (DMA_CH0CTL0_HSIZE_0)     /*!< DMA transfer data width 16bit      */
 #define DMA_DATAWIDTH_32BIT         (DMA_CH0CTL0_HSIZE_1)     /*!< DMA transfer data width 32bit      */
 /**
@@ -207,21 +208,21 @@ typedef struct
  */
 
 /**
- * @defgroup DMA_Llp_En DMA LLP(linked list pinter) enable or disable
+ * @defgroup DMA_Llp_En DMA LLP(linked list pointer) enable or disable
  * @{
  */
-#define DMA_LLP_ENABLE              (DMA_CH0CTL0_LLPEN)       /*!< DMA LLP(linked list pinter) enable     */
-#define DMA_LLP_DISABLE             ((uint32_t)0x00000000ul)   /*!< DMA LLP(linked list pinter) disable    */
+#define DMA_LLP_ENABLE              (DMA_CH0CTL0_LLPEN)       /*!< DMA LLP(linked list pointer) enable     */
+#define DMA_LLP_DISABLE             ((uint32_t)0x00000000ul)  /*!< DMA LLP(linked list pointer) disable    */
 /**
  * @}
  */
 
 /**
- * @defgroup DMA_Llp_Mode DMA linked list pinter mode while transferring complete
+ * @defgroup DMA_Llp_Mode DMA linked list pointer mode while transferring complete
  * @{
  */
 #define DMA_LLP_RUN                 (DMA_CH0CTL0_LLPRUN)      /*!< DMA Llp run right now while transfering complete     */
-#define DMA_LLP_WAIT                ((uint32_t)0x00000000ul)   /*!< DMA Llp wait next request while transfering complete */
+#define DMA_LLP_WAIT                ((uint32_t)0x00000000ul)  /*!< DMA Llp wait next request while transfering complete */
 /**
  * @}
  */
@@ -230,7 +231,7 @@ typedef struct
  * @defgroup DMA_SrcAddr_Incremented_Mode DMA source address increment mode
  * @{
  */
-#define DMA_SRCADDRINC_FIX          ((uint32_t)0x00000000ul)   /*!< DMA source address fix             */
+#define DMA_SRCADDRINC_FIX          ((uint32_t)0x00000000ul)  /*!< DMA source address fix             */
 #define DMA_SRCADDRINC_INC          (DMA_CH0CTL1_SINC_0)      /*!< DMA source address increment       */
 #define DMA_SRCADDRINC_DEC          (DMA_CH0CTL1_SINC_1)      /*!< DMA source address decrement       */
 /**
@@ -241,7 +242,7 @@ typedef struct
  * @defgroup DMA_DesAddr_Incremented_Mode DMA destination address increment mode
  * @{
  */
-#define DMA_DESADDRINC_FIX          ((uint32_t)0x00000000ul)   /*!< DMA destination address fix        */
+#define DMA_DESADDRINC_FIX          ((uint32_t)0x00000000ul)  /*!< DMA destination address fix        */
 #define DMA_DESADDRINC_INC          (DMA_CH0CTL1_DINC_0)      /*!< DMA destination address increment  */
 #define DMA_DESADDRINC_DEC          (DMA_CH0CTL1_DINC_1)      /*!< DMA destination address decrement  */
 /**
@@ -252,7 +253,7 @@ typedef struct
  * @defgroup DMA_Rpt_Nonseq_State DMA source & destination address repeat & non_sequence state
  * @{
  */
-#define DMA_RPTNSSEL_DISABLE        ((uint32_t)0x00000000ul)   /*!< DMA disbale address repeat or non_sequence */
+#define DMA_RPTNSSEL_DISABLE        ((uint32_t)0x00000000ul)  /*!< DMA disbale address repeat or non_sequence */
 #define DMA_RPTNSSEL_ENABLE         (DMA_CH0CTL1_RPTNSEN)     /*!< DMA enable address repeat or non_sequence  */
 /**
  * @}
@@ -262,7 +263,7 @@ typedef struct
  * @defgroup DMA_Rpt_Nonseq_Sel DMA source & destination address repeat & non_sequence selection
  * @{
  */
-#define DMA_RPTNSSEL_SRCRPT         ((uint32_t)0x00000000ul)   /*!< DMA source address repeat              */
+#define DMA_RPTNSSEL_SRCRPT         ((uint32_t)0x00000000ul)  /*!< DMA source address repeat              */
 #define DMA_RPTNSSEL_DESRPT         (DMA_CH0CTL1_RPTNSSEL_0)  /*!< DMA destination address repeat         */
 #define DMA_RPTNSSEL_SRCNSEQ        (DMA_CH0CTL1_RPTNSSEL_1)  /*!< DMA source address non_sequence        */
 #define DMA_RPTNSSEL_DESNSEQ        (DMA_CH0CTL1_RPTNSSEL)    /*!< DMA destination address non_sequence   */

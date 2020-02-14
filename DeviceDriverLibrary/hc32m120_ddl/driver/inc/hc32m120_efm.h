@@ -7,6 +7,7 @@
    Change Logs:
    Date             Author          Notes
    2019-05-06       Chengy          First version
+   2020-02-14       Heqb            Added interrupt source in efm.h
  @endverbatim
  *******************************************************************************
  * Copyright (C) 2016, Huada Semiconductor Co., Ltd. All rights reserved.
@@ -321,9 +322,15 @@ typedef struct
  * @defgroup EFM_Interrupt_definition EFM Interrupt definition
  * @{
  */
-#define EFM_INT_EOP                 (EFM_FITE_OPTENDITE)      /*!< End of EFM Operation Interrupt source      */
-#define EFM_INT_PEERR               (EFM_FITE_PEERRITE)       /*!< Program/erase error Interrupt source       */
-#define EFM_INT_RDCOLERR            (EFM_FITE_RDCOLERRITE)    /*!< Read collide error Interrupt source        */
+#define EFM_INT_EOP                 (EFM_FITE_OPTENDITE)                        /*!< End of EFM Operation Interrupt source      */
+#define EFM_INT_PEERR               (EFM_FITE_PEERRITE)                         /*!< Program/erase error Interrupt source       */
+#define EFM_INT_RDCOLERR            (EFM_FITE_RDCOLERRITE)                      /*!< Read collide error Interrupt source        */
+#define EFM_INT_EOP_PEERR           (EFM_FITE_OPTENDITE | EFM_FITE_PEERRITE)    /*!< End of EFM Operation and Program/erase error Interrupt */
+#define EFM_INT_EOP_RDCOLERR        (EFM_FITE_OPTENDITE | EFM_FITE_RDCOLERRITE) /*!< End of EFM Operation and Read collide error Interrupt  */
+#define EFM_INT_PEERR_RDCOLERR      (EFM_FITE_PEERRITE  | EFM_FITE_RDCOLERRITE) /*!< Program/erase error and Read collide error Interrupt */
+#define EFM_INT_ALL                 (EFM_FITE_OPTENDITE |                      \
+                                     EFM_FITE_PEERRITE  |                      \
+                                     EFM_FITE_RDCOLERRITE)                      /*!< All Interrupt source*/
 /**
  * @}
  */

@@ -7,6 +7,7 @@
    Change Logs:
    Date             Author          Notes
    2019-05-06       Chengy          First version
+   2020-02-14       Heqb            Modify EFM_InterruptCmd function for efm.c
  @endverbatim
  *******************************************************************************
  * Copyright (C) 2016, Huada Semiconductor Co., Ltd. All rights reserved.
@@ -109,7 +110,11 @@
 #define IS_VALID_EFM_INT_SEL(SEL)                                              \
 (       ((SEL) == EFM_INT_EOP)                  ||                             \
         ((SEL) == EFM_INT_PEERR)                ||                             \
-        ((SEL) == EFM_INT_RDCOLERR))
+        ((SEL) == EFM_INT_RDCOLERR)             ||                             \
+        ((SEL) == EFM_INT_EOP_PEERR)            ||                             \
+        ((SEL) == EFM_INT_EOP_RDCOLERR)         ||                             \
+        ((SEL) == EFM_INT_PEERR_RDCOLERR)       ||                             \
+        ((SEL) == EFM_INT_ALL))
 
 /*  Parameter validity check for flash flag. */
 #define IS_VALID_EFM_FLAG(flag)                                                \
@@ -383,32 +388,26 @@ void EFM_SetOperateMode(uint32_t u32PeMode)
  *   @arg  EFM_INT_EOP                  End of EFM Operation Interrupt source
  *   @arg  EFM_INT_PEERR                Program/erase error Interrupt source
  *   @arg  EFM_INT_RDCOLERR             Read collide error Interrupt source
+ *   @arg  EFM_INT_EOP_PEERR            End of EFM Operation and Program/erase error Interrupt
+ *   @arg  EFM_INT_EOP_RDCOLERR         End of EFM Operation and Read collide error Interrupt
+ *   @arg  EFM_INT_PEERR_RDCOLERR       Program/erase error and Read collide error Interrupt
+ *   @arg  EFM_INT_ALL                  All Interrupt source
  * @param  [in] enNewState              The new state of specified interrupt.
  *  This parameter can be: Enable or Disable.
  * @retval None
  */
 void EFM_InterruptCmd(uint32_t u32EfmInt, en_functional_state_t enNewState)
 {
-    uint8_t u8state;
-
     DDL_ASSERT(IS_FUNCTIONAL_STATE(enNewState));
     DDL_ASSERT(IS_VALID_EFM_INT_SEL(u32EfmInt));
 
-    u8state = ((Enable == enNewState) ? 1u : 0u);
-
-    switch(u32EfmInt)
+    if(Enable == enNewState)
     {
-        case EFM_INT_EOP:
-            MODIFY_REG(M0P_EFM->FITE, EFM_FITE_OPTENDITE, u8state);
-            break;
-        case EFM_INT_PEERR:
-            MODIFY_REG(M0P_EFM->FITE, EFM_FITE_PEERRITE, u8state);
-            break;
-        case EFM_INT_RDCOLERR:
-            MODIFY_REG(M0P_EFM->FITE, EFM_FITE_RDCOLERRITE, u8state);
-            break;
-        default:
-            break;
+        SET_REG32_BIT(M0P_EFM->FITE, u32EfmInt);
+    }
+    else
+    {
+        CLEAR_REG32_BIT(M0P_EFM->FITE, u32EfmInt);
     }
 }
 

@@ -8,6 +8,7 @@
    Date             Author          Notes
    2019-06-22       Zhangxl         First version
    2020-01-03       Zhangxl         Comment revise for SetFunc API
+   2020-02-14       Zhangxl         Comment revise for GPIO_DeInit API
  @endverbatim
  *******************************************************************************
  * Copyright (C) 2016, Huada Semiconductor Co., Ltd. All rights reserved.
@@ -318,7 +319,7 @@ void GPIO_DeInit(void)
               &stcGpioInit);
     /* PORT13 reset */
     GPIO_Init(GPIO_PORT_13, (GPIO_PIN_0 | GPIO_PIN_7), &stcGpioInit);
-    /* PORT0 reset */
+    /* PORT14 reset */
     GPIO_Init(GPIO_PORT_14, (GPIO_PIN_0 | GPIO_PIN_6 | GPIO_PIN_7), &stcGpioInit);
 
     /* PORT global register reset */

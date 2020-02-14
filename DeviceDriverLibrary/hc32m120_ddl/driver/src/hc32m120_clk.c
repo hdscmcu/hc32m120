@@ -6,6 +6,8 @@
    Change Logs:
    Date             Author          Notes
    2019-06-24       Chengy          First version
+   2020-02-14       Zhangxl         Use CLEAR_REG8_BIT for CLK_ClearXtalStdFlag()
+                                    instead of CLEAR_REG8_BIT
  @endverbatim
  *******************************************************************************
  * Copyright (C) 2016, Huada Semiconductor Co., Ltd. All rights reserved.
@@ -835,7 +837,7 @@ void CLK_ClearXtalStdFlag(void)
     if(CMU_XTALSTDSR_XTALSTDF == M0P_CMU->XTALSTDSR)
     {
         /* Clear the XTAL STD flag */
-        CLEAR_REG8(M0P_CMU->XTALSTDSR, CMU_XTALSTDSR_XTALSTDF);
+        CLEAR_REG8_BIT(M0P_CMU->XTALSTDSR, CMU_XTALSTDSR_XTALSTDF);
     }
 
     /* Disbale register write. */
