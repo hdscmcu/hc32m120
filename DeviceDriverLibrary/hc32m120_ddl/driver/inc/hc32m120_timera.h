@@ -593,7 +593,7 @@ typedef enum
  */
 __STATIC_INLINE void TIMERA_SetTriggerSrc(en_event_src_t enEvtSrc)
 {
-    WRITE_REG(M0P_AOS->TMRA_HTSSR, enEvtSrc);
+    WRITE_REG32(M0P_AOS->TMRA_HTSSR, enEvtSrc);
 }
 
 /* Initialization and configuration TimerA base functions */

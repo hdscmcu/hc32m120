@@ -6,6 +6,7 @@
    Change Logs:
    Date             Author          Notes
    2019-07-09       Chengy          First version
+   2020-02-28       Chengy          Modified comment error & spelling error
  @endverbatim
  *******************************************************************************
  * Copyright (C) 2016, Huada Semiconductor Co., Ltd. All rights reserved.
@@ -122,7 +123,7 @@
         ((level) == PWC_LVD_LEVEL11)            ||                             \
         ((level) == PWC_LVD_INP))
 
-/*  Parameter validity check for LVD Level. */
+/*  Parameter validity check for LVD digital filter cycle selection. */
 #define IS_VALID_PWC_LVD_DFS_SEL(sel)                                          \
 (       ((sel) == PWC_LVD_DFS_2)                ||                             \
         ((sel) == PWC_LVD_DFS_4)                ||                             \
@@ -178,7 +179,7 @@ void PWC_EnterStopMode(void)
 {
     PWC_REG_WRITE_ENABLE();
 
-    SET_BIT(M0P_PWC->STPMCR, PWC_STPMCR_STOP);
+    SET_REG8_BIT(M0P_PWC->STPMCR, PWC_STPMCR_STOP);
 
     PWC_REG_WRITE_DISABLE();
 
@@ -320,7 +321,7 @@ en_result_t PWC_PwrMonInit(const stc_pwc_pwrmon_init_t* pstcPwrMonInit)
         else
         {
             MODIFY_REG8(M0P_PWC->PWRC, PWC_PWRC_PWMONSEL , pstcPwrMonInit->u8PwrMonSel);
-            SET_BIT(M0P_PWC->PWRC, PWC_PWRC_PWMONE);
+            SET_REG8_BIT(M0P_PWC->PWRC, PWC_PWRC_PWMONE);
         }
 
         PWC_REG_WRITE_DISABLE();
@@ -426,7 +427,7 @@ en_result_t PWC_LvdConfig(const stc_pwc_lvd_cfg_t* pstcLvdCfg)
 
         /* When modified pstcLvdCfg->u16DFSel, the pstcLvdCfg->u16DFDIS shoule be PWC_LVD_DF_OFF
         LVDICGCR.DFS modified should when LVDICGCR.DFDIS = 1. */
-        SET_BIT(M0P_EFM->LVDICGCR, EFM_LVDICGCR_DFDIS);
+        SET_REG16_BIT(M0P_EFM->LVDICGCR, EFM_LVDICGCR_DFDIS);
         /* Set the LVD digital filter sample ability. */
         MODIFY_REG16(M0P_EFM->LVDICGCR, EFM_LVDICGCR_DFS, pstcLvdCfg->u16DFSel);
 
@@ -505,7 +506,7 @@ void PWC_LvdExRefVolCmd(en_functional_state_t enNewState)
 }
 
 /**
- * @brief  Get LVD flgg.
+ * @brief  Get LVD flag.
  * @param  [in] u8Flag      The flag of LVD.
  *  This parameter can be one of the following values:
  *   @arg    PWC_LVD_FLAG_DET       VDD = VLVD or LVDINP = VInref

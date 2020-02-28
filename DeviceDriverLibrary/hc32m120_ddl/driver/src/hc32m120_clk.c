@@ -7,7 +7,8 @@
    Date             Author          Notes
    2019-06-24       Chengy          First version
    2020-02-14       Zhangxl         Use CLEAR_REG8_BIT for CLK_ClearXtalStdFlag()
-                                    instead of CLEAR_REG8_BIT
+                                    instead of CLEAR_REG8
+   2020-02-27       Zhangxl         Use new macro in hc32_common.h
  @endverbatim
  *******************************************************************************
  * Copyright (C) 2016, Huada Semiconductor Co., Ltd. All rights reserved.
@@ -351,7 +352,7 @@ en_result_t CLK_XTALInit(const stc_clk_xtal_init_t* pstcXtal)
         if(CLK_XTAL_OFF == pstcXtal->u8XtalState)
         {
             /* When the XTAL is used as system clock in these case XTAL will not disabled */
-            if(CLK_SYSCLKSOURCE_XTAL == READ_BIT(M0P_CMU->CKSWR, CMU_CKSWR_CKSW))
+            if(CLK_SYSCLKSOURCE_XTAL == READ_REG8_BIT(M0P_CMU->CKSWR, CMU_CKSWR_CKSW))
             {
                 enRet = Error;
             }
@@ -360,7 +361,7 @@ en_result_t CLK_XTALInit(const stc_clk_xtal_init_t* pstcXtal)
                 /* Disable XTAL */
                 M0P_CMU->XTALCR = CLK_XTAL_OFF;
                 /* Wait XTAL stop */
-                while(CLK_FLAG_XTALSTB == READ_BIT(M0P_CMU->OSCSTBSR, CMU_OSCSTBSR_XTALSTBF))
+                while(CLK_FLAG_XTALSTB == READ_REG8_BIT(M0P_CMU->OSCSTBSR, CMU_OSCSTBSR_XTALSTBF))
                 {
                     u32timeout++;
                     if(u32timeout > CLK_XTAL_TIMEOUT)
@@ -389,7 +390,7 @@ en_result_t CLK_XTALInit(const stc_clk_xtal_init_t* pstcXtal)
             /* Enable XTAL */
             M0P_CMU->XTALCR = CLK_XTAL_ON;
             /* Wait XTAL stable */
-            while(CLK_FLAG_XTALSTB != READ_BIT(M0P_CMU->OSCSTBSR, CMU_OSCSTBSR_XTALSTBF))
+            while(CLK_FLAG_XTALSTB != READ_REG8_BIT(M0P_CMU->OSCSTBSR, CMU_OSCSTBSR_XTALSTBF))
             {
                 u32timeout++;
                 if(u32timeout > CLK_XTAL_TIMEOUT)
@@ -446,7 +447,7 @@ en_result_t CLK_HRCInit(uint8_t HRCState, uint8_t HRCFreq)
     if(CLK_HRC_OFF == HRCState)
     {
         /* When the HRC is used as system clock in these case HRC will not disabled */
-        if(CLK_SYSCLKSOURCE_HRC == READ_BIT(M0P_CMU->CKSWR, CMU_CKSWR_CKSW))
+        if(CLK_SYSCLKSOURCE_HRC == READ_REG8_BIT(M0P_CMU->CKSWR, CMU_CKSWR_CKSW))
         {
             enRet = Error;
         }
@@ -455,7 +456,7 @@ en_result_t CLK_HRCInit(uint8_t HRCState, uint8_t HRCFreq)
             /* Disable HRC */
             M0P_CMU->HRCCR = CLK_HRC_OFF;
             /* Wait HRC stop */
-            while(CLK_FLAG_HRCSTB == READ_BIT(M0P_CMU->OSCSTBSR, CMU_OSCSTBSR_HRCSTBF))
+            while(CLK_FLAG_HRCSTB == READ_REG8_BIT(M0P_CMU->OSCSTBSR, CMU_OSCSTBSR_HRCSTBF))
             {
                 u32timeout++;
                 if(u32timeout > CLK_TIMEOUT)
@@ -486,7 +487,7 @@ en_result_t CLK_HRCInit(uint8_t HRCState, uint8_t HRCFreq)
         /* Enable HRC */
         M0P_CMU->HRCCR = CLK_HRC_ON;
         /* Wait HRC stable */
-        while(CLK_FLAG_HRCSTB != READ_BIT(M0P_CMU->OSCSTBSR, CMU_OSCSTBSR_HRCSTBF))
+        while(CLK_FLAG_HRCSTB != READ_REG8_BIT(M0P_CMU->OSCSTBSR, CMU_OSCSTBSR_HRCSTBF))
         {
             u32timeout++;
             if(u32timeout > CLK_TIMEOUT)
@@ -530,7 +531,7 @@ en_result_t CLK_LRCInit(uint8_t LRCState)
     if(CLK_LRC_OFF == LRCState)
     {
         /* When the LRC is used as system clock in these case LRC will not disabled */
-        if(CLK_SYSCLKSOURCE_LRC == READ_BIT(M0P_CMU->CKSWR, CMU_CKSWR_CKSW))
+        if(CLK_SYSCLKSOURCE_LRC == READ_REG8_BIT(M0P_CMU->CKSWR, CMU_CKSWR_CKSW))
         {
             enRet = Error;
         }
@@ -625,6 +626,8 @@ en_result_t CLK_XTALStdInit(const stc_clk_xtalstd_init_t* pstcXtalStd)
             M0P_CMU->XTALSTDCR = pstcXtalStd->u8XtalStdState | pstcXtalStd->u8XtalStdMode | \
                                 pstcXtalStd->u8XtalStdInt   | pstcXtalStd->u8XtalStdRst;
         }
+        /* Disbale register write. */
+        CLK_REG_WRITE_DISABLE();
     }
 
     return enRet;
@@ -858,7 +861,7 @@ en_flag_status_t CLK_GetStableFlag(uint8_t u8Flag)
     /* Check parameters */
     DDL_ASSERT(IS_VALID_CLK_STB_FLAG(u8Flag));
 
-    if (Reset != (READ_BIT(M0P_CMU->OSCSTBSR, u8Flag)))
+    if (Reset != (READ_REG8_BIT(M0P_CMU->OSCSTBSR, u8Flag)))
     {
         enFlagStatus = Set;
     }

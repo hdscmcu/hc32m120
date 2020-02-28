@@ -239,7 +239,7 @@ typedef struct
  */
 __STATIC_INLINE uint16_t SWDT_GetCountValue(void)
 {
-    return (uint16_t)(READ_REG(M0P_SWDT->SR) & SWDT_SR_CNT);
+    return (uint16_t)(READ_REG32(M0P_SWDT->SR) & SWDT_SR_CNT);
 }
 
 /* Initialization and configuration functions */

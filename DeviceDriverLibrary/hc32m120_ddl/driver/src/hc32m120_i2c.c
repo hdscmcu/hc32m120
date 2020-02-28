@@ -7,6 +7,7 @@
    Change Logs:
    Date             Author          Notes
    2019-07-09       Wangmin         First version
+   2020-02-28       Wangmin         Modify after hc32_common.h changed.
  @endverbatim
  *******************************************************************************
  * Copyright (C) 2016, Huada Semiconductor Co., Ltd. All rights reserved.
@@ -216,7 +217,7 @@ en_result_t I2C_BaudrateConfig(const stc_i2c_init_t* pstcI2C_InitStruct, float32
         Baudrate = pstcI2C_InitStruct->u32Baudrate;
 
         /* Judge digital filter status*/
-        if(0u != READ_BIT(M0P_I2C->FLTR, I2C_FLTR_DNFEN))
+        if(0u != READ_REG32_BIT(M0P_I2C->FLTR, I2C_FLTR_DNFEN))
         {
             dnfsum = ((M0P_I2C->FLTR & I2C_FLTR_DNF) >> I2C_FLTR_DNF_POS) + 1u;
         }
@@ -359,7 +360,7 @@ void I2C_SmbusConfig(uint32_t SmbusConfig)
 {
     DDL_ASSERT(IS_VALID_SMBUS_CONFIG(SmbusConfig));
 
-    MODIFY_REG(M0P_I2C->CR1, I2C_SMBUS_CONFIG_CLEARMASK, SmbusConfig);
+    MODIFY_REG32(M0P_I2C->CR1, I2C_SMBUS_CONFIG_CLEARMASK, SmbusConfig);
 }
 
 /**
@@ -398,7 +399,7 @@ void I2C_DigitalFilterConfig(uint32_t DigFilterMode)
 {
     DDL_ASSERT(IS_VALID_DIGITAL_FILTER(DigFilterMode));
 
-    MODIFY_REG(M0P_I2C->FLTR, I2C_FLTR_DNF, DigFilterMode);
+    MODIFY_REG32(M0P_I2C->FLTR, I2C_FLTR_DNF, DigFilterMode);
 }
 
 /**

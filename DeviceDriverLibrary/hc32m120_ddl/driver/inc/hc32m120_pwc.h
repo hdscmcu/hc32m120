@@ -7,6 +7,9 @@
    Change Logs:
    Date             Author          Notes
    2019-07-09       Chengy          First version
+   2020-02-28       Chengy          Modified definition of PWC_LVD_IR_OFF
+                                    Modified definition of PWC_REG_Write_Configuration
+                                    #Elimate impact on other bits
  @endverbatim
  *******************************************************************************
  * Copyright (C) 2016, Huada Semiconductor Co., Ltd. All rights reserved.
@@ -198,11 +201,11 @@ typedef struct
  */
 
 /**
- * @defgroup PWC_LVD_IR_Config PWC LVD Interrupt Config
+ * @defgroup PWC_LVD_IR_Config PWC LVD Interrupt and Reser Config
  * @{
  */
 #define PWC_LVD_IR_ON               (0x0000U)
-#define PWC_LVD_IR_OFF              (EFM_LVDICGCR_LVDDIS)
+#define PWC_LVD_IR_OFF              (EFM_LVDICGCR_IRDIS)
 /**
  * @}
  */
@@ -218,7 +221,7 @@ typedef struct
  */
 
 /**
- * @defgroup PWC_LVD_Int_Mode_selection PWC_LVD_nt_IMode_selection maskable or non_maskable
+ * @defgroup PWC_LVD_Int_Mode_selection PWC_LVD_Int_Mode_selection maskable or non_maskable
  * @{
  */
 #define PWC_LVD_INT_MASK            (0x0000U)
@@ -343,11 +346,11 @@ typedef struct
  * @defgroup PWC_REG_Write_Configuration PWC register write Configuration
  * @{
  */
-#define PWC_REG_WRITE_ENABLE()          (M0P_PWC->FPRC = 0xa502u)
-#define PWC_REG_WRITE_DISABLE()         (M0P_PWC->FPRC = 0xa500u)
+#define PWC_REG_WRITE_ENABLE()          (M0P_PWC->FPRC |= 0xa502u)
+#define PWC_REG_WRITE_DISABLE()         (M0P_PWC->FPRC = (0xa500u | (M0P_PWC->FPRC & (uint16_t)(~2u))))
 
-#define PWC_LVD_REG_WRITE_ENABLE()      (M0P_PWC->FPRC = 0xa508u)
-#define PWC_LVD_REG_WRITE_DISABLE()     (M0P_PWC->FPRC = 0xa500u)
+#define PWC_LVD_REG_WRITE_ENABLE()      (M0P_PWC->FPRC |= 0xa508u)
+#define PWC_LVD_REG_WRITE_DISABLE()     (M0P_PWC->FPRC = (0xa500u | (M0P_PWC->FPRC & (uint16_t)(~8u))))
 
 /**
  * @}

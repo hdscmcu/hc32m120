@@ -6,6 +6,7 @@
    Change Logs:
    Date             Author          Notes
    2019-07-03       Hongjh          First version
+   2020-02-27       Hongjh          Delete struct member u32HwFlowCtrl of stc_lin_init_t
  @endverbatim
  *******************************************************************************
  * Copyright (C) 2016, Huada Semiconductor Co., Ltd. All rights reserved.
@@ -471,7 +472,7 @@ en_result_t USART_LinInit(M0P_USART_TypeDef *USARTx,
         WRITE_REG32(USARTx->CR2, (pstcInit->u32ClkMode | USART_CR2_LINEN));
 
         /* Set CR3 */
-        WRITE_REG32(USARTx->CR3, pstcInit->u32HwFlowCtrl);
+        WRITE_REG32(USARTx->CR3, 0UL);
 
         /* Set PR */
         WRITE_REG32(USARTx->PR, pstcInit->u32ClkPrescaler);
@@ -503,7 +504,6 @@ en_result_t USART_LinStructInit(stc_lin_init_t *pstcInit)
         pstcInit->u32NoiseFilterState = USART_NOISE_FILTER_DISABLE;
         pstcInit->u32OversamplingBits = USART_OVERSAMPLING_BITS_16;
         pstcInit->u32SbDetectPolarity = USART_SB_DETECT_LOW;
-        pstcInit->u32HwFlowCtrl = USART_HWFLOWCTRL_RTS;
         enRet = Ok;
     }
 
@@ -667,6 +667,7 @@ en_result_t USART_FuncCmd(M0P_USART_TypeDef *USARTx,
  *           @arg M0P_USART3:           USART unit 3 instance register base
  * @param  [in] u32Func                 USART function type
  *         This parameter can be one of the following values:
+ *           @arg USART_RX:             USART RX function
  *           @arg USART_TX:             USART TX function
  *           @arg USART_INT_RX:         USART RX interrupt function
  *           @arg USART_INT_TC:         USART transmission complete interrupt

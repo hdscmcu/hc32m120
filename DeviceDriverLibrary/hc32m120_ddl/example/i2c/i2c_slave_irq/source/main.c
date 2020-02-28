@@ -6,6 +6,7 @@
    Change Logs:
    Date             Author          Notes
    2019-07-09       Wangmin         First version
+   2020-02-28       Wangmin         Fix warning for GCC
  @endverbatim
  *******************************************************************************
  * Copyright (C) 2016, Huada Semiconductor Co., Ltd. All rights reserved.
@@ -406,11 +407,10 @@ static void I2C_RXI_Callback(void)
  */
 static void I2C_TEI_Callback(void)
 {
-    __IO uint8_t tmp;
     if(Set == I2C_GetStatus(I2C_SR_TENDF))
     {
         /* Dummy read for release SCL */
-        tmp = I2C_ReadData();
+        I2C_ReadData();
     }
 }
 

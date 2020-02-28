@@ -370,8 +370,8 @@ typedef struct
  * @defgroup CLK_REG_Write_Configuration CLK register write Configuration
  * @{
  */
-#define CLK_REG_WRITE_ENABLE()      (M0P_PWC->FPRC = 0xa501u)
-#define CLK_REG_WRITE_DISABLE()     (M0P_PWC->FPRC = 0xa500u)
+#define CLK_REG_WRITE_ENABLE()      (M0P_PWC->FPRC |= 0xa501u)
+#define CLK_REG_WRITE_DISABLE()     (M0P_PWC->FPRC = (0xa500u | (M0P_PWC->FPRC & (uint16_t)(~1u))))
 
 #define CLK_HRCCFGR_WRITE_ENBALE()  {M0P_EFM->FAPRT = 0x0123u; \
                                      M0P_EFM->FAPRT = 0x3210u;}

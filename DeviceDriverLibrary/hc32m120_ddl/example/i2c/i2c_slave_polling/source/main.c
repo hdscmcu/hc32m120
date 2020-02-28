@@ -6,6 +6,7 @@
    Change Logs:
    Date             Author          Notes
    2019-07-09       Wangmin         First version
+   2020-02-28       Wangmin         Fix warning for GCC
  @endverbatim
  *******************************************************************************
  * Copyright (C) 2016, Huada Semiconductor Co., Ltd. All rights reserved.
@@ -229,7 +230,6 @@ static void SystemClockConfig(void)
 static uint8_t Slave_WriteData(uint8_t *pTxData, uint32_t u32Size)
 {
     uint32_t u32TimeOut = TIMEOUT;
-    __IO uint8_t u8tmp;
     uint8_t Ret = I2C_RET_OK;
 
     while(u32Size--)
@@ -265,7 +265,7 @@ static uint8_t Slave_WriteData(uint8_t *pTxData, uint32_t u32Size)
     while(Reset == I2C_GetStatus(I2C_SR_STOPF))
     {
         /* Release SCL pin */
-        u8tmp = I2C_ReadData();
+        I2C_ReadData();
         if(0u == (u32TimeOut--))
         {
             Ret = I2C_RET_ERROR;

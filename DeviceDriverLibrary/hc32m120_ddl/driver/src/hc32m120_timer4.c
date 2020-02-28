@@ -7,6 +7,9 @@
    Change Logs:
    Date             Author          Notes
    2019-06-24       Hongjh          First version
+   2020-02-14       Hongjh          1. Comment revise for TIMER4_CNT_GetIntMaskTimes/
+                                       TIMER4_CNT_GetIntMaskCurrentTimes API
+                                    2. API name revise for TIMER4_CNT_GetIntMaskCurrentTimes
  @endverbatim
  *******************************************************************************
  * Copyright (C) 2016, Huada Semiconductor Co., Ltd. All rights reserved.
@@ -451,7 +454,7 @@ en_result_t TIMER4_CNT_DeInit(void)
 
 /**
  * @brief  Set Timer4 counter clock division
- * @param  [in] u16Div                  TimerB clock division
+ * @param  [in] u16Div                  Timer4 clock division
  *         This parameter can be one of the following values:
  *           @arg TIMER4_CNT_CLK_DIV1:      HCLK
  *           @arg TIMER4_CNT_CLK_DIV2:      HCLK/2
@@ -497,7 +500,7 @@ uint16_t TIMER4_CNT_GetClkDiv(void)
 
 /**
  * @brief  Enable or disable specified Timer4 counter interrupt
- * @param  [in] u16IntSource            TimerB interrupt source
+ * @param  [in] u16IntSource            Timer4 interrupt source
  *         This parameter can be one of the following values:
  *           @arg TIMER4_CNT_IT_PEAK:   Overflow interrupt
  *           @arg TIMER4_CNT_IT_ZERO:   Underflow interrupt
@@ -526,7 +529,7 @@ void TIMER4_CNT_IntCmd(uint16_t u16IntSource, en_functional_state_t enNewSta)
 
 /**
  * @brief  Set Timer4 CNT interrupt mask times
- * @param  [in] u16IntSource            TimerB interrupt source
+ * @param  [in] u16IntSource            Timer4 interrupt source
  *         This parameter can be one of the following values:
  *           @arg TIMER4_CNT_IT_PEAK:   Overflow interrupt
  *           @arg TIMER4_CNT_IT_ZERO:   Underflow interrupt
@@ -571,7 +574,7 @@ void TIMER4_CNT_SetIntMaskTimes(uint16_t u16IntSource,
 
 /**
  * @brief  Get Timer4 CNT interrupt mask times
- * @param  [in] u16IntSource            TimerB interrupt source
+ * @param  [in] u16IntSource            Timer4 interrupt source
  *         This parameter can be one of the following values:
  *           @arg TIMER4_CNT_IT_PEAK:   Overflow interrupt
  *           @arg TIMER4_CNT_IT_ZERO:   Underflow interrupt
@@ -592,7 +595,7 @@ void TIMER4_CNT_SetIntMaskTimes(uint16_t u16IntSource,
  *           @arg TIMER4_CNT_INT_MASK_13:   CNT interrupt flag is set once for 14 every CNT counts at "0x0000" or peak (skiping 13 count)
  *           @arg TIMER4_CNT_INT_MASK_14:   CNT interrupt flag is set once for 15 every CNT counts at "0x0000" or peak (skiping 14 count)
  *           @arg TIMER4_CNT_INT_MASK_15:   CNT interrupt flag is set once for 16 every CNT counts at "0x0000" or peak (skiping 15 count)
- *           @arg TIMER4_RESULT_ERROR:      TimerB interrupt source is invalid
+ *           @arg TIMER4_RESULT_ERROR:      Timer4 interrupt source is invalid
  */
 uint16_t TIMER4_CNT_GetIntMaskTimes(uint16_t u16IntSource)
 {
@@ -619,7 +622,7 @@ uint16_t TIMER4_CNT_GetIntMaskTimes(uint16_t u16IntSource)
 
 /**
  * @brief  Get Timer4 CNT interrupt mask current times
- * @param  [in] u16IntSource            TimerB interrupt source
+ * @param  [in] u16IntSource            Timer4 interrupt source
  *         This parameter can be one of the following values:
  *           @arg TIMER4_CNT_IT_PEAK:   Overflow interrupt
  *           @arg TIMER4_CNT_IT_ZERO:   Underflow interrupt
@@ -640,9 +643,9 @@ uint16_t TIMER4_CNT_GetIntMaskTimes(uint16_t u16IntSource)
  *           @arg TIMER4_CNT_INT_MASK_13:   CNT interrupt flag is set once for 14 every CNT counts at "0x0000" or peak (skiping 13 count)
  *           @arg TIMER4_CNT_INT_MASK_14:   CNT interrupt flag is set once for 15 every CNT counts at "0x0000" or peak (skiping 14 count)
  *           @arg TIMER4_CNT_INT_MASK_15:   CNT interrupt flag is set once for 16 every CNT counts at "0x0000" or peak (skiping 15 count)
- *           @arg TIMER4_RESULT_ERROR:      TimerB interrupt source is invalid
+ *           @arg TIMER4_RESULT_ERROR:      Timer4 interrupt source is invalid
  */
-uint16_t TIMER4_CNT_GetIntMaskCurrenTimes(uint16_t u16IntSource)
+uint16_t TIMER4_CNT_GetIntMaskCurrentTimes(uint16_t u16IntSource)
 {
     uint16_t u16MaskTimes;
 

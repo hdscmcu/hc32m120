@@ -1,5 +1,16 @@
 version     date           comment
  1.0.0
+            Feb 28, 2020   1. Some typo in PWC/CLK
+                           2. Delete struct member u32HwFlowCtrl of stc_lin_init_t for USART driver
+                           3. Modify function comment: UsartGetSilenceModeState for USART sample
+                           4. Delete macro-defgroup USART_Interrupt_definition in hc32_usart.h files
+                           5. Modify interrupt macro define to USART_INT_TXE /USART_INT_TC/USART_INT_RX
+                           6. Use MODIFY_REG32,CLEAR_REG32_BIT,SET_REG32_BIT for drivers 
+                           7. Comment&API name revise for TIMER4_CNT_GetIntMaskTimes/
+                              TIMER4_CNT_GetIntMaskCurrentTimes API for Timer4.
+                           8. Merge hc32_common.h files of HC32F120, HC32F4A0, HC32M120, HC32M423 series chips.
+                           9. Delete history legacy register macro definition in hc32_common.h files.
+
             Feb 14, 2020   1. Modify EFM_InterruptCmd function for efm.c.
                            2. Replace the ddl_config.h for CRC.
                            3. Use CLEAR_REG8_BIT for CLK_ClearXtalStdFlag() instead of CLEAR_REG8_BIT.

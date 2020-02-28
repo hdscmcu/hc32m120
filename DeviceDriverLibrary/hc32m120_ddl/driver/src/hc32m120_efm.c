@@ -8,6 +8,8 @@
    Date             Author          Notes
    2019-05-06       Chengy          First version
    2020-02-14       Heqb            Modify EFM_InterruptCmd function for efm.c
+   2020-02-21       Heqb            Use MODIFY_REG32,CLEAR_REG32_BIT,
+                                    SET_REG32_BIT for efm.c
  @endverbatim
  *******************************************************************************
  * Copyright (C) 2016, Huada Semiconductor Co., Ltd. All rights reserved.
@@ -269,10 +271,10 @@ en_result_t EFM_Config(const stc_efm_cfg_t *pstcEfmCfg)
         DDL_ASSERT(IS_VALID_EFM_CACHEEN_STATE(pstcEfmCfg->u32CacheEn));
 
         /* Config efm. */
-        MODIFY_REG(M0P_EFM->FRMC, EFM_FRMC_FLWT | EFM_FRMC_CACHE | EFM_FRMC_PREFETE | EFM_FRMC_CRST0,
+        MODIFY_REG32(M0P_EFM->FRMC, EFM_FRMC_FLWT | EFM_FRMC_CACHE | EFM_FRMC_PREFETE | EFM_FRMC_CRST0,
                 pstcEfmCfg->u32Latency | pstcEfmCfg->u32CacheEn |
                 pstcEfmCfg->u32InsCache | pstcEfmCfg->u32CacheRst);
-        MODIFY_REG(M0P_EFM->FWMC, EFM_FWMC_BUSHLDCTL, pstcEfmCfg->u32BusState);
+        MODIFY_REG32(M0P_EFM->FWMC, EFM_FWMC_BUSHLDCTL, pstcEfmCfg->u32BusState);
     }
 
     return enRet;
@@ -292,7 +294,7 @@ void EFM_SetLatency(uint32_t u32Latency)
     DDL_ASSERT(IS_VALID_EFM_LATENCY(u32Latency));
 
     /* Set the code latency value. */
-    MODIFY_REG(M0P_EFM->FRMC, EFM_FRMC_FLWT, u32Latency);
+    MODIFY_REG32(M0P_EFM->FRMC, EFM_FRMC_FLWT, u32Latency);
 }
 
 /**
@@ -307,11 +309,11 @@ void EFM_DataCacheRstCmd(en_functional_state_t enNewState)
 
     if(Enable == enNewState)
     {
-        SET_BIT(M0P_EFM->FRMC, EFM_FRMC_CRST0);
+        SET_REG32_BIT(M0P_EFM->FRMC, EFM_FRMC_CRST0);
     }
     else
     {
-        CLEAR_BIT(M0P_EFM->FRMC, EFM_FRMC_CRST0);
+        CLEAR_REG32_BIT(M0P_EFM->FRMC, EFM_FRMC_CRST0);
     }
 }
 
@@ -327,11 +329,11 @@ void EFM_InstructionCacheCmd(en_functional_state_t enNewState)
 
     if(Enable == enNewState)
     {
-        SET_BIT(M0P_EFM->FRMC, EFM_FRMC_PREFETE);
+        SET_REG32_BIT(M0P_EFM->FRMC, EFM_FRMC_PREFETE);
     }
     else
     {
-        CLEAR_BIT(M0P_EFM->FRMC, EFM_FRMC_PREFETE);
+        CLEAR_REG32_BIT(M0P_EFM->FRMC, EFM_FRMC_PREFETE);
     }
 }
 
@@ -347,11 +349,11 @@ void EFM_CacheCmd(en_functional_state_t enNewState)
 
     if(Enable == enNewState)
     {
-        SET_BIT(M0P_EFM->FRMC, EFM_FRMC_CACHE);
+        SET_REG32_BIT(M0P_EFM->FRMC, EFM_FRMC_CACHE);
     }
     else
     {
-        CLEAR_BIT(M0P_EFM->FRMC, EFM_FRMC_CACHE);
+        CLEAR_REG32_BIT(M0P_EFM->FRMC, EFM_FRMC_CACHE);
     }
 }
 
@@ -374,11 +376,11 @@ void EFM_SetOperateMode(uint32_t u32PeMode)
     DDL_ASSERT(IS_VALID_EFM_OPERATE_MD(u32PeMode));
 
     /* Enable operate mode modified. */
-    SET_BIT(M0P_EFM->FWMC, EFM_FWMC_PEMODE);
+    SET_REG32_BIT(M0P_EFM->FWMC, EFM_FWMC_PEMODE);
     /* Set the program or erase mode. */
-    MODIFY_REG(M0P_EFM->FWMC, EFM_FWMC_PEMOD, u32PeMode);
+    MODIFY_REG32(M0P_EFM->FWMC, EFM_FWMC_PEMOD, u32PeMode);
     /* Disable operate mode modified. */
-    CLEAR_BIT(M0P_EFM->FWMC, EFM_FWMC_PEMODE);
+    CLEAR_REG32_BIT(M0P_EFM->FWMC, EFM_FWMC_PEMODE);
 }
 
 /**
@@ -445,7 +447,7 @@ en_flag_status_t EFM_GetFlagStatus(uint32_t u32flag)
  */
 void EFM_ClearFlag(uint32_t u32flag)
 {
-    SET_BIT(M0P_EFM->FSCLR, u32flag);
+    SET_REG32_BIT(M0P_EFM->FSCLR, u32flag);
 }
 
 /**
@@ -458,9 +460,9 @@ void EFM_ClearFlag(uint32_t u32flag)
 void EFM_SetWinProtectAddr(stc_efm_win_protect_addr_t stcAddr)
 {
     /* Set protect area start address */
-    MODIFY_REG(M0P_EFM->FPMTSW, EFM_FPMTSW_FPMTSW, stcAddr.u32StartAddr);
+    MODIFY_REG32(M0P_EFM->FPMTSW, EFM_FPMTSW_FPMTSW, stcAddr.u32StartAddr);
     /* Set protect area end address */
-    MODIFY_REG(M0P_EFM->FPMTEW, EFM_FPMTEW_FPMTEW, stcAddr.u32EndAddr);
+    MODIFY_REG32(M0P_EFM->FPMTEW, EFM_FPMTEW_FPMTEW, stcAddr.u32EndAddr);
 }
 
 /**
@@ -475,7 +477,7 @@ void EFM_SetBusState(uint32_t u32State)
 {
     DDL_ASSERT(IS_VALID_EFM_BUS_STATE(u32State));
 
-    MODIFY_REG(M0P_EFM->FWMC, EFM_FWMC_BUSHLDCTL, u32State);
+    MODIFY_REG32(M0P_EFM->FWMC, EFM_FWMC_BUSHLDCTL, u32State);
 }
 
 /**

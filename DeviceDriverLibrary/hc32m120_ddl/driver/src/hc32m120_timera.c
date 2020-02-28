@@ -379,7 +379,7 @@ en_result_t TIMERA_DeInit(M0P_TMRA_TypeDef *TMRAx)
                 WRITE_REG16(*TMRA_BCONR, 0x0000u);
             }
         }
-        WRITE_REG16(M0P_AOS->TMRA_HTSSR, TIMERA_TRIG_SRC_MASK);
+        WRITE_REG32(M0P_AOS->TMRA_HTSSR, TIMERA_TRIG_SRC_MASK);
     }
 
     return enRet;
@@ -1709,11 +1709,11 @@ en_flag_status_t TIMERA_GetFlag(M0P_TMRA_TypeDef *TMRAx, uint16_t u16Flag)
     {
         case TIMERA_FLAG_OVF:
         case TIMERA_FLAG_UDF:
-            enFlag = (READ_BIT(TMRAx->BCSTR, u16Flag)) ? Set : Reset;
+            enFlag = (READ_REG16_BIT(TMRAx->BCSTR, u16Flag)) ? Set : Reset;
             break;
         case TIMERA_FLAG_CMP1:
         case TIMERA_FLAG_CMP2:
-            enFlag = (READ_BIT(TMRAx->STFLR, u16Flag)) ? Set : Reset;
+            enFlag = (READ_REG16_BIT(TMRAx->STFLR, u16Flag)) ? Set : Reset;
             break;
         default:
             break;

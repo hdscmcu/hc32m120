@@ -205,10 +205,10 @@ en_result_t SWDT_Init(const stc_swdt_init_t *pstcSwdtInit)
         DDL_ASSERT(IS_SWDT_REQUEST_TYPE(pstcSwdtInit->u32RequestType));
 
         /* SWDT CR Configuration(Software Start Mode) */
-        MODIFY_REG(M0P_SWDT->CR, SWDT_CR_CLEAR_MASK,
-                   (pstcSwdtInit->u32CountCycle   | pstcSwdtInit->u32ClockDivision |
-                    pstcSwdtInit->u32RefreshRange | pstcSwdtInit->u32LPModeCountEn |
-                    pstcSwdtInit->u32RequestType));
+        MODIFY_REG32(M0P_SWDT->CR, SWDT_CR_CLEAR_MASK,
+                    (pstcSwdtInit->u32CountCycle   | pstcSwdtInit->u32ClockDivision |
+                     pstcSwdtInit->u32RefreshRange | pstcSwdtInit->u32LPModeCountEn |
+                     pstcSwdtInit->u32RequestType));
     }
 
     return enRet;
@@ -243,7 +243,7 @@ en_flag_status_t SWDT_GetFlag(uint32_t u32Flag)
     /* Check parameters */
     DDL_ASSERT(IS_SWDT_FLAG(u32Flag));
 
-    if (Reset != (READ_BIT(M0P_SWDT->SR, u32Flag)))
+    if (Reset != (READ_REG32_BIT(M0P_SWDT->SR, u32Flag)))
     {
         enFlagSta = Set;
     }
@@ -273,9 +273,9 @@ en_result_t SWDT_ClearFlag(uint32_t u32Flag)
     u32Timeout = SystemCoreClock >> 8u;
     do
     {
-        CLEAR_BIT(M0P_SWDT->SR, u32Flag);
+        CLEAR_REG32_BIT(M0P_SWDT->SR, u32Flag);
         u32TimeCnt++;
-    } while ((Reset != (READ_BIT(M0P_SWDT->SR, u32Flag))) && (u32TimeCnt < u32Timeout));
+    } while ((Reset != (READ_REG32_BIT(M0P_SWDT->SR, u32Flag))) && (u32TimeCnt < u32Timeout));
 
     if (u32TimeCnt >= u32Timeout)
     {

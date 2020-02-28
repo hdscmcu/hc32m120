@@ -862,7 +862,7 @@ __STATIC_INLINE void TIMER4_CNT_ClearFlag(uint16_t u16Flag)
  */
 __STATIC_INLINE void TIMER4_CNT_SetCycleVal(uint16_t u16CycleVal)
 {
-    WRITE_REG(M0P_TMR4->CPSR, u16CycleVal);
+    WRITE_REG16(M0P_TMR4->CPSR, u16CycleVal);
 }
 
 /**
@@ -915,7 +915,7 @@ void TIMER4_CNT_IntCmd(uint16_t u16IntSource, en_functional_state_t enNewSta);
 void TIMER4_CNT_SetIntMaskTimes(uint16_t u16IntSource,
                                 uint16_t u16MaskTimes);
 uint16_t TIMER4_CNT_GetIntMaskTimes(uint16_t u16IntSource);
-uint16_t TIMER4_CNT_GetIntMaskCurrenTimes(uint16_t u16IntSource);
+uint16_t TIMER4_CNT_GetIntMaskCurrentTimes(uint16_t u16IntSource);
 en_result_t TIMER4_OCO_Init(uint32_t u32Ch,
                                 const stc_timer4_oco_init_t *pstcInit);
 en_result_t TIMER4_OCO_StructInit(stc_timer4_oco_init_t *pstcInit);

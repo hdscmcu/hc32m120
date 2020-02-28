@@ -9,6 +9,7 @@
    2019-07-08       Chengy          First version
    2020-02-13       Chengy          Modified register INTCLR1 to INTCLR0 in 
                                     function DMA_ClearErrFlag()
+   2020-02-27       Zhangxl         Use new macro in hc32_common.h
  @endverbatim
  *******************************************************************************
  * Copyright (C) 2016, Huada Semiconductor Co., Ltd. All rights reserved.
@@ -240,10 +241,10 @@ void DMA_ErrIrqCmd(uint8_t u8Ch, uint32_t u32Irq, en_functional_state_t enNewSta
     switch (enNewState)
     {
         case Enable:
-            CLEAR_BIT(M0P_DMA->INTMASK0, u32Irq << u8Ch);
+            CLEAR_REG32_BIT(M0P_DMA->INTMASK0, u32Irq << u8Ch);
             break;
         case Disable:
-            SET_BIT(M0P_DMA->INTMASK0, u32Irq << u8Ch);
+            SET_REG32_BIT(M0P_DMA->INTMASK0, u32Irq << u8Ch);
             break;
         default:
             break;
@@ -270,10 +271,10 @@ void DMA_CplIrqCmd(uint8_t u8Ch, uint32_t u32Irq, en_functional_state_t enNewSta
     switch (enNewState)
     {
         case Enable:
-            CLEAR_BIT(M0P_DMA->INTMASK1, u32Irq << u8Ch);
+            CLEAR_REG32_BIT(M0P_DMA->INTMASK1, u32Irq << u8Ch);
             break;
         case Disable:
-            SET_BIT(M0P_DMA->INTMASK1, u32Irq << u8Ch);
+            SET_REG32_BIT(M0P_DMA->INTMASK1, u32Irq << u8Ch);
             break;
         default:
             break;
@@ -521,7 +522,7 @@ void DMA_ClearErrFlag(uint8_t u8Ch, uint32_t u32Flag)
     DDL_ASSERT(IS_VALID_DMA_CH(u8Ch));
     DDL_ASSERT(IS_VALID_DMA_ERR_FLAG(u32Flag));
 
-    SET_BIT(M0P_DMA->INTCLR0, (u32Flag << u8Ch));
+    SET_REG32_BIT(M0P_DMA->INTCLR0, (u32Flag << u8Ch));
 }
 
 /**
@@ -538,7 +539,7 @@ void DMA_ClearCplFlag(uint8_t u8Ch, uint32_t u32Flag)
     DDL_ASSERT(IS_VALID_DMA_CH(u8Ch));
     DDL_ASSERT(IS_VALID_DMA_CPL_FLAG(u32Flag));
 
-    SET_BIT(M0P_DMA->INTCLR1, (u32Flag << u8Ch));
+    SET_REG32_BIT(M0P_DMA->INTCLR1, (u32Flag << u8Ch));
 }
 
 /**

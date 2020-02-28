@@ -8,8 +8,10 @@
    2019-06-28       Yangjp          First version
    2020-01-08       Wuze            Added compiler macro definitions for GCC.
    2020-01-20       Yangjp          Modify the macro definition of CLEAR_REG.
-   2020-02-14       Zhangxl         Sync 'Compiler Macro Definitions' with other 
+   2020-02-14       Zhangxl         Sync 'Compiler Macro Definitions' with other
                                     series.
+   2020-02-17       Yangjp          Merge HC32F120, HC32F4A0, HC32M120, HC32M423
+                                    series chips.
  @endverbatim
  *******************************************************************************
  * Copyright (C) 2016, Huada Semiconductor Co., Ltd. All rights reserved.
@@ -80,9 +82,18 @@ extern "C"
 /**
  * @brief HC32 Common Device Include
  */
-#if defined(HC32M120)
+#if defined(HC32F120)
+    #include "hc32f120.h"
+    #include "system_hc32f120.h"
+#elif defined(HC32F4A0)
+    #include "hc32f4a0.h"
+    #include "system_hc32f4a0.h"
+#elif defined(HC32M120)
     #include "hc32m120.h"
     #include "system_hc32m120.h"
+#elif defined(HC32M423)
+    #include "hc32m423.h"
+    #include "system_hc32m423.h"
 #else
     #error "Please select first the target HC32xxxx device used in your application (in hc32xxxx.h file)"
 #endif
@@ -120,8 +131,8 @@ typedef void (*func_ptr_arg1_t)(uint8_t);
  */
 typedef enum
 {
-    Disable = 0u,
-    Enable  = 1u,
+    Disable = 0U,
+    Enable  = 1U,
 } en_functional_state_t;
 
 /* Check if it is a functional state */
@@ -132,8 +143,8 @@ typedef enum
  */
 typedef enum
 {
-    Reset = 0u,
-    Set   = 1u,
+    Reset = 0U,
+    Set   = 1U,
 } en_flag_status_t, en_int_status_t;
 
 /**
@@ -141,18 +152,18 @@ typedef enum
  */
 typedef enum
 {
-    Ok                       = 0u,   /*!< No error */
-    Error                    = 1u,   /*!< Non-specific error code */
-    ErrorAddressAlignment    = 2u,   /*!< Address alignment does not match */
-    ErrorAccessRights        = 3u,   /*!< Wrong mode (e.g. user/system) mode is set */
-    ErrorInvalidParameter    = 4u,   /*!< Provided parameter is not valid */
-    ErrorOperationInProgress = 5u,   /*!< A conflicting or requested operation is still in progress */
-    ErrorInvalidMode         = 6u,   /*!< Operation not allowed in current mode */
-    ErrorUninitialized       = 7u,   /*!< Module (or part of it) was not initialized properly */
-    ErrorBufferFull          = 8u,   /*!< Circular buffer can not be written because the buffer is full */
-    ErrorTimeout             = 9u,   /*!< Time Out error occurred (e.g. I2C arbitration lost, Flash time-out, etc.) */
-    ErrorNotReady            = 10u,  /*!< A requested final state is not reached */
-    OperationInProgress      = 11u,  /*!< Indicator for operation in progress (e.g. ADC conversion not finished, DMA channel used, etc.) */
+    Ok                       = 0U,   /*!< No error */
+    Error                    = 1U,   /*!< Non-specific error code */
+    ErrorAddressAlignment    = 2U,   /*!< Address alignment does not match */
+    ErrorAccessRights        = 3U,   /*!< Wrong mode (e.g. user/system) mode is set */
+    ErrorInvalidParameter    = 4U,   /*!< Provided parameter is not valid */
+    ErrorOperationInProgress = 5U,   /*!< A conflicting or requested operation is still in progress */
+    ErrorInvalidMode         = 6U,   /*!< Operation not allowed in current mode */
+    ErrorUninitialized       = 7U,   /*!< Module (or part of it) was not initialized properly */
+    ErrorBufferFull          = 8U,   /*!< Circular buffer can not be written because the buffer is full */
+    ErrorTimeout             = 9U,   /*!< Time Out error occurred (e.g. I2C arbitration lost, Flash time-out, etc.) */
+    ErrorNotReady            = 10U,  /*!< A requested final state is not reached */
+    OperationInProgress      = 11U,  /*!< Indicator for operation in progress (e.g. ADC conversion not finished, DMA channel used, etc.) */
 } en_result_t;
 
 /**
@@ -225,13 +236,13 @@ typedef enum
  * @{
  */
 /* Decimal to BCD */
-#define DEC2BCD(x)                      ((((x) / 10u) << 4u) + ((x) % 10u))
+#define DEC2BCD(x)                      ((((x) / 10U) << 4U) + ((x) % 10U))
 
 /* BCD to decimal */
-#define BCD2DEC(x)                      ((((x) >> 4u) * 10u) + ((x) & 0x0Fu))
+#define BCD2DEC(x)                      ((((x) >> 4U) * 10U) + ((x) & 0x0FU))
 
 /* Returns the dimension of an array */
-#define ARRAY_SZ(X)                     (sizeof(X) / sizeof((X)[0]))
+#define ARRAY_SZ(x)                     (sizeof(x) / sizeof((x)[0]))
 /**
  * @}
  */
@@ -240,54 +251,33 @@ typedef enum
  * @defgroup Register_Macro_Definitions Register Macro Definitions
  * @{
  */
-#define SET_BIT(REG, BIT)               ((REG) |= (BIT))
-
-#define CLEAR_BIT(REG, BIT)             ((REG) &= ~(BIT))
-
-#define READ_BIT(REG, BIT)              ((REG) & (BIT))
-
-#define CLEAR_REG(REG)                  ((REG) = (0x0))
-
-#define WRITE_REG(REG, VAL)             ((REG) = (VAL))
-
-#define READ_REG(REG)                   ((REG))
-
-#define MODIFY_REG(REGS, CLEARMASK, SETMASK)    (WRITE_REG((REGS), (((READ_REG((REGS))) & (~(CLEARMASK))) | (SETMASK))))
-
-/* Specificed register bit width */
 #define SET_REG8_BIT(REG, BIT)          ((REG) |= ((uint8_t)(BIT)))
 #define SET_REG16_BIT(REG, BIT)         ((REG) |= ((uint16_t)(BIT)))
 #define SET_REG32_BIT(REG, BIT)         ((REG) |= ((uint32_t)(BIT)))
 
-/* Specificed register bit width */
 #define CLEAR_REG8_BIT(REG, BIT)        ((REG) &= ((uint8_t)(~(BIT))))
 #define CLEAR_REG16_BIT(REG, BIT)       ((REG) &= ((uint16_t)(~(BIT))))
 #define CLEAR_REG32_BIT(REG, BIT)       ((REG) &= ((uint32_t)(~(BIT))))
 
-/* Specificed register bit width */
 #define READ_REG8_BIT(REG, BIT)         ((REG) & ((uint8_t)(BIT)))
 #define READ_REG16_BIT(REG, BIT)        ((REG) & ((uint16_t)(BIT)))
 #define READ_REG32_BIT(REG, BIT)        ((REG) & ((uint32_t)(BIT)))
 
-/* Specificed register bit width */
-#define CLEAR_REG8(REG)                 ((REG) = ((uint8_t)(0u)))
-#define CLEAR_REG16(REG)                ((REG) = ((uint16_t)(0u)))
-#define CLEAR_REG32(REG)                ((REG) = ((uint32_t)(0ul)))
+#define CLEAR_REG8(REG)                 ((REG) = ((uint8_t)(0U)))
+#define CLEAR_REG16(REG)                ((REG) = ((uint16_t)(0U)))
+#define CLEAR_REG32(REG)                ((REG) = ((uint32_t)(0UL)))
 
-/* Specificed register bit width */
 #define WRITE_REG8(REG, VAL)            ((REG) = ((uint8_t)(VAL)))
 #define WRITE_REG16(REG, VAL)           ((REG) = ((uint16_t)(VAL)))
 #define WRITE_REG32(REG, VAL)           ((REG) = ((uint32_t)(VAL)))
 
-/* Specificed register bit width */
 #define READ_REG8(REG)                  ((uint8_t)(REG))
 #define READ_REG16(REG)                 ((uint16_t)(REG))
 #define READ_REG32(REG)                 ((uint32_t)(REG))
 
-/* Specificed register bit width */
-#define MODIFY_REG8(REGS, CLEARMASK, SETMASK)   (WRITE_REG((REGS), (((READ_REG((REGS))) & ((uint8_t)(~(CLEARMASK)))) | ((uint8_t)(SETMASK)))))
-#define MODIFY_REG16(REGS, CLEARMASK, SETMASK)  (WRITE_REG((REGS), (((READ_REG((REGS))) & ((uint16_t)(~(CLEARMASK)))) | ((uint16_t)(SETMASK)))))
-#define MODIFY_REG32(REGS, CLEARMASK, SETMASK)  (WRITE_REG((REGS), (((READ_REG((REGS))) & ((uint32_t)(~(CLEARMASK)))) | ((uint32_t)(SETMASK)))))
+#define MODIFY_REG8(REGS, CLEARMASK, SETMASK)   (WRITE_REG8((REGS), (((READ_REG8((REGS))) & ((uint8_t)(~(CLEARMASK)))) | ((uint8_t)(SETMASK)))))
+#define MODIFY_REG16(REGS, CLEARMASK, SETMASK)  (WRITE_REG16((REGS), (((READ_REG16((REGS))) & ((uint16_t)(~(CLEARMASK)))) | ((uint16_t)(SETMASK)))))
+#define MODIFY_REG32(REGS, CLEARMASK, SETMASK)  (WRITE_REG32((REGS), (((READ_REG32((REGS))) & ((uint32_t)(~(CLEARMASK)))) | ((uint32_t)(SETMASK)))))
 /**
  * @}
  */

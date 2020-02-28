@@ -7,6 +7,7 @@
    Change Logs:
    Date             Author          Notes
    2019-06-25       Wangmin         First version
+   2020-02-28       Wangmin         Modify after hc32_common.h changed.
  @endverbatim
  *******************************************************************************
  * Copyright (C) 2016, Huada Semiconductor Co., Ltd. All rights reserved.
@@ -362,7 +363,7 @@ en_result_t CMP_ResultGet(M0P_CMP_TypeDef *CMPx, en_flag_status_t* penFunSta)
     }
     else
     {
-        *penFunSta = READ_BIT(CMPx->MDR, CMP_MDR_CMON) ? Reset : Set;
+        *penFunSta = READ_REG8_BIT(CMPx->MDR, CMP_MDR_CMON) ? Reset : Set;
     }
 
     return enRet;
@@ -431,7 +432,7 @@ en_result_t CMP_TimerWindowsCfg(M0P_CMP_TypeDef *CMPx,
           SET_REG8_BIT(CMPx->TWR2, pstcCMP_TimerWinStruct->u8TWSelect):
             CLEAR_REG8_BIT(CMPx->TWR2, pstcCMP_TimerWinStruct->u8TWSelect);
 
-        WRITE_REG(CMPx->TWR1, pstcCMP_TimerWinStruct->u8TWSelect);
+        WRITE_REG8(CMPx->TWR1, pstcCMP_TimerWinStruct->u8TWSelect);
 
         /* Enable timer windows mode and configuration output level in windows invalid */
         MODIFY_REG8(CMPx->OCR,
@@ -491,23 +492,23 @@ en_result_t CMP_NormalModeInit(M0P_CMP_TypeDef *CMPx,
         }
 
         /* Stop CMP compare */
-        WRITE_REG(CMPx->MDR, 0x00u);
+        WRITE_REG8(CMPx->MDR, 0x00u);
 
         /* Set compare voltage and reference voltage */
-        WRITE_REG(CMPx->VSR,
+        WRITE_REG8(CMPx->VSR,
                   pstcCMP_InitStruct->u8CmpVol | pstcCMP_InitStruct->u8RefVol);
         /* Delay 300ns*/
         CMP_Delay300ns();
 
         /* Start CMP compare */
-        WRITE_REG(CMPx->MDR, CMP_MDR_CENB);
+        WRITE_REG8(CMPx->MDR, CMP_MDR_CENB);
         /* Delay 300ns*/
         CMP_Delay300ns();
 
         /* Set output filter and output detect edge and output polarity */
-        WRITE_REG(CMPx->FIR,
+        WRITE_REG8(CMPx->FIR,
                   pstcCMP_InitStruct->u8OutFilter | pstcCMP_InitStruct->u8OutDetectEdges);
-        WRITE_REG(CMPx->OCR, pstcCMP_InitStruct->u8OutPolarity);
+        WRITE_REG8(CMPx->OCR, pstcCMP_InitStruct->u8OutPolarity);
     }
     return enRet;
 }
@@ -550,25 +551,25 @@ en_result_t CMP_WindowModeInit(const stc_cmp_init_t* pstcCMP_InitStruct)
         DDL_ASSERT(IS_CMP2_RVSL(pstcCMP_InitStruct->u8WinVolHigh));
 
         /* Stop CMP compare */
-        WRITE_REG(M0P_CMP1->MDR, 0x00u);
-        WRITE_REG(M0P_CMP2->MDR, 0x00u);
+        WRITE_REG8(M0P_CMP1->MDR, 0x00u);
+        WRITE_REG8(M0P_CMP2->MDR, 0x00u);
 
         /* Set compare voltage and reference voltage */
-        WRITE_REG(M0P_CMP1->VSR,
+        WRITE_REG8(M0P_CMP1->VSR,
                   CMP1_CVSL_VCMP2_0 | pstcCMP_InitStruct->u8WinVolLow);
-        WRITE_REG(M0P_CMP2->VSR,
+        WRITE_REG8(M0P_CMP2->VSR,
                   CMP2_CVSL_VCMP2_0 | pstcCMP_InitStruct->u8WinVolHigh);
 
         /* Select window compare mode and start CMP compare function */
-        WRITE_REG(M0P_CMP2->MDR, CMP_MDR_CENB | CMP_MDR_CWDE);
-        WRITE_REG(M0P_CMP1->MDR, CMP_MDR_CENB);
+        WRITE_REG8(M0P_CMP2->MDR, CMP_MDR_CENB | CMP_MDR_CWDE);
+        WRITE_REG8(M0P_CMP1->MDR, CMP_MDR_CENB);
         /* Delay 300ns*/
         CMP_Delay300ns();
 
         /* Set output filter and output detect edge and output polarity */
-        WRITE_REG(M0P_CMP2->FIR,
+        WRITE_REG8(M0P_CMP2->FIR,
                   pstcCMP_InitStruct->u8OutFilter | pstcCMP_InitStruct->u8OutDetectEdges);
-        WRITE_REG(M0P_CMP2->OCR, pstcCMP_InitStruct->u8OutPolarity);
+        WRITE_REG8(M0P_CMP2->OCR, pstcCMP_InitStruct->u8OutPolarity);
     }
     return enRet;
 }

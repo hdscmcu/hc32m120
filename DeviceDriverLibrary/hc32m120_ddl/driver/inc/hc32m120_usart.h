@@ -7,6 +7,8 @@
    Change Logs:
    Date             Author          Notes
    2019-07-03       Hongjh          First version
+   2020-02-21       Hongjh          Delete macro-defgroup USART_Interrupt_definition
+   2020-02-27       Hongjh          Delete struct member u32HwFlowCtrl of stc_lin_init_t
  @endverbatim
  *******************************************************************************
  * Copyright (C) 2016, Huada Semiconductor Co., Ltd. All rights reserved.
@@ -179,9 +181,6 @@ typedef struct
 
     uint32_t u32SbDetectPolarity;       /*!< Start Bit Detect Polarity.
                                              This parameter can be a value of @ref USART_Start_Bit_Detect_Polarity */
-
-    uint32_t u32HwFlowCtrl;             /*!< Hardware flow control.
-                                             This parameter can be a value of @ref USART_HWFLOWCTRL */
 } stc_lin_init_t;
 
 /**
@@ -250,17 +249,6 @@ typedef struct
 #define USART_CLEAR_FLAG_PE                     (USART_CR1_CPE)   /*!< Clear Parity error flag */
 #define USART_CLEAR_FLAG_FE                     (USART_CR1_CFE)   /*!< Clear Framing error flag */
 #define USART_CLEAR_FLAG_ORE                    (USART_CR1_CORE)  /*!< Clear Overrun error flag */
-/**
- * @}
- */
-
-/**
- * @defgroup USART_Interrupt_definition USART Interrupts Definition
- * @{
- */
-#define USART_IT_RI                             (USART_CR1_RIE)   /*!< Receive data register not empty && Receive error interrupt */
-#define USART_IT_TC                             (USART_CR1_TCIE)  /*!< Transmission complete interrupt */
-#define USART_IT_TXE                            (USART_CR1_TXEIE) /*!< Transmit data register empty interrupt */
 /**
  * @}
  */
