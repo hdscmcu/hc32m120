@@ -6,6 +6,8 @@
    Change Logs:
    Date             Author          Notes
    2019-07-04       Hongjh          First version
+   2020-02-21       Hongjh          Modify interrupt macro define to USART_INT_TXE
+                                    /USART_INT_TC/USART_INT_RX
  @endverbatim
  *******************************************************************************
  * Copyright (C) 2016, Huada Semiconductor Co., Ltd. All rights reserved.
@@ -199,7 +201,7 @@ static void LedConfig(void)
 static void UsartTxIrqCallback(void)
 {
     en_flag_status_t enFlag = USART_GetFlag(CLKSYNC_UNIT, USART_FLAG_TXE);
-    en_functional_state_t enState = USART_GetFuncState(CLKSYNC_UNIT, USART_IT_TXE);
+    en_functional_state_t enState = USART_GetFuncState(CLKSYNC_UNIT, USART_INT_TXE);
 
     if ((Set == enFlag) && (Enable == enState))
     {
@@ -215,7 +217,7 @@ static void UsartTxIrqCallback(void)
 static void UsartTcIrqCallback(void)
 {
     en_flag_status_t enFlag = USART_GetFlag(CLKSYNC_UNIT, USART_FLAG_TC);
-    en_functional_state_t enState = USART_GetFuncState(CLKSYNC_UNIT, USART_IT_TC);
+    en_functional_state_t enState = USART_GetFuncState(CLKSYNC_UNIT, USART_INT_TC);
 
     if ((Set == enFlag) && (Enable == enState))
     {
@@ -231,7 +233,7 @@ static void UsartTcIrqCallback(void)
 static void UsartRxIrqCallback(void)
 {
     en_flag_status_t enFlag = USART_GetFlag(CLKSYNC_UNIT, USART_FLAG_RXNE);
-    en_functional_state_t enState = USART_GetFuncState(CLKSYNC_UNIT, USART_IT_RI);
+    en_functional_state_t enState = USART_GetFuncState(CLKSYNC_UNIT, USART_INT_RX);
 
     if ((Set == enFlag) && (Enable == enState))
     {

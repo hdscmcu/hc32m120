@@ -7,6 +7,7 @@
    Change Logs:
    Date             Author          Notes
    2019-06-26       Zhangxl         First version
+   2020-02-27       Zhangxl         Use new macro in hc32_common.h
  @endverbatim
  *******************************************************************************
  * Copyright (C) 2016, Huada Semiconductor Co., Ltd. All rights reserved.
@@ -210,7 +211,7 @@ typedef struct
  */
 __STATIC_INLINE void EVENT_PORT_DeInit(void)
 {
-    WRITE_REG(M0P_AOS->EVPRT_CR, EVENT_PORT_CR_RESET_VALUE);
+    WRITE_REG32(M0P_AOS->EVPRT_CR, EVENT_PORT_CR_RESET_VALUE);
 }
 
 en_result_t EVENT_PORT_Init(const stc_event_port_init_t *pstcEventPortInit);

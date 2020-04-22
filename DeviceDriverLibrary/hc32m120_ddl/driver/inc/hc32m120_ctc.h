@@ -90,7 +90,7 @@ extern "C"
  */
 typedef struct stc_ctc_init
 {
-    uint32_t u32Fhrc;               /*!< HCR clock frequency
+    uint32_t u32Fhrc;               /*!< HRC clock frequency
                                          This parameter can be a value of @ref CTC_Trimming_HRC_Frequency */
 
     uint32_t u32Fref;               /*!< Reference clock frequency */

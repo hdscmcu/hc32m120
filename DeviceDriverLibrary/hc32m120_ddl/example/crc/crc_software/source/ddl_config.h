@@ -1,11 +1,11 @@
 /**
  *******************************************************************************
- * @file  crc/crc_base/source/ddl_config.h
+ * @file  crc/crc_software/source/ddl_config.h
  * @brief This file contains HC32 Series Device Driver Library usage management.
  @verbatim
    Change Logs:
    Date             Author          Notes
-   2019-03-04       Yangjp          First version
+   2019-06-28       Yangjp          First version
  @endverbatim
  *******************************************************************************
  * Copyright (C) 2016, Huada Semiconductor Co., Ltd. All rights reserved.
@@ -86,7 +86,6 @@ extern "C"
 #define DDL_ICG_ENABLE                              (DDL_ON)
 #define DDL_UTILITY_ENABLE                          (DDL_ON)
 #define DDL_PRINT_ENABLE                            (DDL_OFF)
-
 #define DDL_ADC_ENABLE                              (DDL_OFF)
 #define DDL_CLK_ENABLE                              (DDL_ON)
 #define DDL_CMP_ENABLE                              (DDL_OFF)
@@ -94,7 +93,10 @@ extern "C"
 #define DDL_CTC_ENABLE                              (DDL_OFF)
 #define DDL_DMA_ENABLE                              (DDL_OFF)
 #define DDL_EFM_ENABLE                              (DDL_OFF)
-#define DDL_EXINT_NMI_SWI_ENABLE                    (DDL_OFF)
+#define DDL_EKEY_ENABLE                             (DDL_OFF)
+#define DDL_EMB_ENABLE                              (DDL_OFF)
+#define DDL_EVENT_PORT_ENABLE                       (DDL_OFF)
+#define DDL_EXINT_NMI_ENABLE                        (DDL_OFF)
 #define DDL_GPIO_ENABLE                             (DDL_ON)
 #define DDL_I2C_ENABLE                              (DDL_OFF)
 #define DDL_INTERRUPTS_ENABLE                       (DDL_OFF)

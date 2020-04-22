@@ -6,6 +6,7 @@
    Change Logs:
    Date             Author          Notes
    2019-07-04       Hongjh          First version
+   2020-02-27       Hongjh          Modify function comment: UsartGetSilenceModeState
  @endverbatim
  *******************************************************************************
  * Copyright (C) 2016, Huada Semiconductor Co., Ltd. All rights reserved.
@@ -334,7 +335,7 @@ static void UsartSetSilenceModeState(uint32_t u32SilenceModeState)
 }
 
 /**
- * @brief  Write ring buffer.
+ * @brief  Get silence mode state.
  * @param  [in] None
  * @retval Returned value can be one of the following values:
  *           @arg USART_UART_SILENCE_MODE:  UART silence mode

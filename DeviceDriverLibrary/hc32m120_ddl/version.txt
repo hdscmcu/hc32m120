@@ -1,9 +1,11 @@
 version     date           comment
  1.0.0
+            Mar 14, 2020   1. Delete unused macro-define for EMB driver
+
             Feb 28, 2020   1. Some typo in PWC/CLK
                            2. Delete struct member u32HwFlowCtrl of stc_lin_init_t for USART driver
                            3. Modify function comment: UsartGetSilenceModeState for USART sample
-                           4. Delete macro-defgroup USART_Interrupt_definition in hc32_usart.h files
+                           4. Delete macro-defgroup USART_Interrupt_definition in hc32m120_usart.h files
                            5. Modify interrupt macro define to USART_INT_TXE /USART_INT_TC/USART_INT_RX
                            6. Use MODIFY_REG32,CLEAR_REG32_BIT,SET_REG32_BIT for drivers 
                            7. Comment&API name revise for TIMER4_CNT_GetIntMaskTimes/
