@@ -8,6 +8,8 @@
    Date             Author          Notes
    2019-06-03       Wuze            First version
    2019-10-17       Wuze            Delete the interval between consecutively sent data.
+   2020-06-24       Wuze            1. Fixed a bug of 3-wire mode.
+                                    2. Implemented SPI_GetFlag and SPI_ClearFlag as normal functions.
  @endverbatim
  *******************************************************************************
  * Copyright (C) 2016, Huada Semiconductor Co., Ltd. All rights reserved.
@@ -166,6 +168,7 @@
  */
 static en_result_t SPI_TxRx(const void *pvTxBuf, void *pvRxBuf, uint32_t u32Length);
 static en_result_t SPI_Tx(const void *pvTxBuf, uint32_t u32Length);
+static en_result_t SPI_CheckStatus(uint32_t u32FlagMsk, uint32_t u32Val);
 
 /**
  * @}
@@ -178,7 +181,7 @@ static en_result_t SPI_Tx(const void *pvTxBuf, uint32_t u32Length);
  * @defgroup SPI_Local_Variables SPI Local Variables
  * @{
  */
-static uint32_t m_u32Timeout = 0u;
+static __IO uint32_t m_u32Timeout = 0u;
 
 /**
  * @}
@@ -222,7 +225,7 @@ en_result_t SPI_Init(const stc_spi_init_t *pstcInit)
         DDL_ASSERT(IS_SPI_FIRST_BIT(pstcInit->u32FirstBit));
 
         u32Div = pstcInit->u32BaudRatePrescaler >> SPI_CFG2_MBR_POS;
-        m_u32Timeout  = (2ul << u32Div) * ((uint32_t)M0P_CMU->SCKDIVR) * 16ul;
+        m_u32Timeout  = (2ul << u32Div) * 8u;
 
         M0P_SPI->CR1  = pstcInit->u32WireMode          |   \
                         pstcInit->u32TransMode         |   \
@@ -238,6 +241,7 @@ en_result_t SPI_Init(const stc_spi_init_t *pstcInit)
                         pstcInit->u32BaudRatePrescaler |   \
                         pstcInit->u32DataSize          |   \
                         pstcInit->u32FirstBit;
+        M0P_SPI->SR  &= (uint32_t)(~SPI_FLAG_CLR_ALL);
         enRet = Ok;
     }
 
@@ -408,6 +412,62 @@ en_result_t SPI_TransmitReceive(const void *pvTxBuf, void *pvRxBuf, uint32_t u32
 }
 
 /**
+ * @brief  SPI get state flag.
+ * @param  [in]  u32Flag        SPI state flag.
+ *                              This parameter can be a value of @ref SPI_State_Flag
+ *   @arg  SPI_FLAG_OVERLOAD
+ *   @arg  SPI_FLAG_IDLE
+ *   @arg  SPI_FLAG_MODE_FAULT
+ *   @arg  SPI_FLAG_PARITY_ERROR
+ *   @arg  SPI_FLAG_UNDERLOAD
+ *   @arg  SPI_FLAG_TX_BUFFER_EMPTY
+ *   @arg  SPI_FLAG_RX_BUFFER_FULL
+ *   @arg  SPI_FLAG_ALL
+ * @retval An en_flag_status_t enumeration.
+ *   @arg  Set: The specified flag is set.
+ *   @arg  Reset: The specified flag is reset.
+ */
+en_flag_status_t SPI_GetFlag(uint32_t u32Flag)
+{
+    en_flag_status_t enRet = Reset;
+    uint32_t u32CurrStatus = M0P_SPI->SR;
+
+    u32Flag &= SPI_FLAG_ALL;
+    if (u32Flag & SPI_FLAG_IDLE)
+    {
+        if ((u32CurrStatus & SPI_FLAG_IDLE) == 0u)
+        {
+            enRet = Set;
+        }
+    }
+
+    u32Flag &= ((uint32_t)~SPI_FLAG_IDLE);
+    if ((u32CurrStatus & u32Flag) != 0u)
+    {
+        enRet = Set;
+    }
+
+    return enRet;
+}
+
+/**
+ * @brief  SPI clear state flag.
+ * @param  [in]  u32Flag        SPI state flag.
+ *                              This parameter can be values of @ref SPI_State_Flag.
+ *   @arg  SPI_FLAG_OVERLOAD
+ *   @arg  SPI_FLAG_MODE_FAULT
+ *   @arg  SPI_FLAG_PARITY_ERROR
+ *   @arg  SPI_FLAG_UNDERLOAD
+ *   @arg  SPI_FLAG_CLR_ALL
+ * @retval None
+ */
+void SPI_ClearFlag(uint32_t u32Flag)
+{
+    u32Flag &= SPI_FLAG_CLR_ALL;
+    M0P_SPI->SR &= (uint32_t)(~u32Flag);
+}
+
+/**
  * @}
  */
 
@@ -426,8 +486,8 @@ en_result_t SPI_TransmitReceive(const void *pvTxBuf, void *pvRxBuf, uint32_t u32
  */
 static en_result_t SPI_TxRx(const void *pvTxBuf, void *pvRxBuf, uint32_t u32Length)
 {
+    uint32_t u32Tmp;
     uint32_t u32BitSize;
-    uint32_t u32Timecount;
     uint32_t u32Count = 0u;
     en_result_t enRet = Ok;
 
@@ -435,6 +495,7 @@ static en_result_t SPI_TxRx(const void *pvTxBuf, void *pvRxBuf, uint32_t u32Leng
 
     while (u32Count < u32Length)
     {
+        /* Write data. */
         if (pvTxBuf != NULL)
         {
             if (u32BitSize)
@@ -451,35 +512,40 @@ static en_result_t SPI_TxRx(const void *pvTxBuf, void *pvRxBuf, uint32_t u32Leng
             M0P_SPI->DR = (uint16_t)0xFFFF;
         }
 
-        u32Timecount = m_u32Timeout;
-        do
+        /* Wait TX buffer empty. */
+        enRet = SPI_CheckStatus(SPI_FLAG_TX_BUFFER_EMPTY, SPI_FLAG_TX_BUFFER_EMPTY);
+        if (enRet != Ok)
         {
-            if (M0P_SPI->SR & SPI_FLAG_RX_BUFFER_FULL)
-            {
-                break;
-            }
-            u32Timecount--;
-        } while (u32Timecount != 0u);
+            break;
+        }
 
+        /* Check RX buffer. */
+        enRet = SPI_CheckStatus(SPI_FLAG_RX_BUFFER_FULL, SPI_FLAG_RX_BUFFER_FULL);
+        if (enRet != Ok)
+        {
+            break;
+        }
+
+        /* Read RX data. */
+        u32Tmp = M0P_SPI->DR;
         if (pvRxBuf != NULL)
         {
             if (u32BitSize)
             {
-                ((uint16_t *)pvRxBuf)[u32Count] = (uint16_t)M0P_SPI->DR;
+                ((uint16_t *)pvRxBuf)[u32Count] = (uint16_t)u32Tmp;
             }
             else
             {
-                ((uint8_t *)pvRxBuf)[u32Count] = (uint8_t)M0P_SPI->DR;
+                ((uint8_t *)pvRxBuf)[u32Count] = (uint8_t)u32Tmp;
             }
         }
 
-        if (u32Timecount == 0u)
-        {
-            enRet = ErrorTimeout;
-            break;
-        }
-
         u32Count++;
+    }
+
+    if (enRet == Ok)
+    {
+        enRet = SPI_CheckStatus(SPI_FLAG_IDLE, 0ul);
     }
 
     return enRet;
@@ -496,7 +562,6 @@ static en_result_t SPI_TxRx(const void *pvTxBuf, void *pvRxBuf, uint32_t u32Leng
 static en_result_t SPI_Tx(const void *pvTxBuf, uint32_t u32Length)
 {
     uint32_t u32Count = 0u;
-    uint32_t u32Timecount;
     uint32_t u32BitSize;
     en_result_t enRet = Ok;
 
@@ -513,22 +578,38 @@ static en_result_t SPI_Tx(const void *pvTxBuf, uint32_t u32Length)
             M0P_SPI->DR = ((const uint8_t *)pvTxBuf)[u32Count];
         }
 
-        u32Timecount = m_u32Timeout;
-        do
+        enRet = SPI_CheckStatus(SPI_FLAG_TX_BUFFER_EMPTY, SPI_FLAG_TX_BUFFER_EMPTY);
+        if (enRet != Ok)
         {
-            if (M0P_SPI->SR & SPI_FLAG_TX_BUFFER_EMPTY)
-            {
-                break;
-            }
-            u32Timecount--;
-        } while (u32Timecount != 0u);
-        
-        if (u32Timecount == 0u)
-        {
-            enRet = ErrorTimeout;
+            break;
         }
 
         u32Count++;
+    }
+
+    return enRet;
+}
+
+/**
+ * @brief  SPI check status.
+ * @param  [in]  u32FlagMsk         Bit mask of status flag.
+ * @param  [in]  u32Val             Valid value of the status.
+ * @retval An en_result_t enumeration value:
+ *   @arg  Ok:                      No errors occurred.
+ *   @arg  ErrorTimeout:            Check status timeout.
+ */
+static en_result_t SPI_CheckStatus(uint32_t u32FlagMsk, uint32_t u32Val)
+{
+    en_result_t enRet = ErrorTimeout;
+    uint32_t u32Timecount = m_u32Timeout;
+
+    while (u32Timecount--)
+    {
+        if ((M0P_SPI->SR & u32FlagMsk) == u32Val)
+        {
+            enRet = Ok;
+            break;
+        }
     }
 
     return enRet;

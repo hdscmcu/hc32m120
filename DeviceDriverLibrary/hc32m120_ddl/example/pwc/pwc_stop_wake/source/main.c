@@ -102,7 +102,6 @@
  * Local variable definitions ('static')
  ******************************************************************************/
 uint8_t u8IntCnt = 0u;
-uint8_t u8HrcState = 0u;
 
 /*******************************************************************************
  * Function implementation - global ('extern') and local ('static')
@@ -177,7 +176,7 @@ static void Led_Init(void)
 }
 
 /**
- * @brief  Main function of CLK project
+ * @brief  Main function of PWC project
  * @param  None
  * @retval int32_t return value, if needed
  */

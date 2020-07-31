@@ -6,6 +6,7 @@
    Change Logs:
    Date             Author          Notes
    2019-07-03       Hongjh          First version
+   2020-07-27       Hongjh          Correct the macro define:IS_CTC_OFFSET_VAL.
  @endverbatim
  *******************************************************************************
  * Copyright (C) 2016, Huada Semiconductor Co., Ltd. All rights reserved.
@@ -101,7 +102,7 @@
     (CTC_TRIMMING_HRC_48MHZ == (x))             ||                             \
     (CTC_TRIMMING_HRC_1P5MHZ == (x)))
 
-#define IS_CTC_OFFSET_VAL(x)                    ((x) <= CTC_CR2_RLDVAL)
+#define IS_CTC_OFFSET_VAL(x)                    ((x) <= CTC_CR2_OFSVAL)
 
 #define IS_CTC_RELOAD_VAL(x)                    ((x) <= (CTC_CR2_RLDVAL >> CTC_CR2_RLDVAL_POS))
 
@@ -149,7 +150,7 @@
 /*******************************************************************************
  * Function implementation - global ('extern') and local ('static')
  ******************************************************************************/
-/** 
+/**
  * @defgroup CTC_Global_Functions CTC Global Functions
  * @{
  */

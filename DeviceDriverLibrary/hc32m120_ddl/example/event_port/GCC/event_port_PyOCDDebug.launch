@@ -32,7 +32,7 @@
     <stringAttribute key="ilg.gnumcueclipse.debug.gdbjtag.pyocd.otherInitCommands" value=""/>
     <stringAttribute key="ilg.gnumcueclipse.debug.gdbjtag.pyocd.otherRunCommands" value=""/>
     <stringAttribute key="ilg.gnumcueclipse.debug.gdbjtag.pyocd.secondResetType" value="halt"/>
-    <stringAttribute key="ilg.gnumcueclipse.debug.gdbjtag.svdPath" value="${project_loc}\..\..\..\mcu\GCC\SVD\hc32m120.svd"/>
+    <stringAttribute key="ilg.gnumcueclipse.debug.gdbjtag.svdPath" value="${project_loc}\..\..\..\mcu\GCC\SVD\HDSC_HC32M120.svd"/>
     <stringAttribute key="org.eclipse.cdt.debug.gdbjtag.core.imageFileName" value=""/>
     <stringAttribute key="org.eclipse.cdt.debug.gdbjtag.core.imageOffset" value=""/>
     <stringAttribute key="org.eclipse.cdt.debug.gdbjtag.core.ipAddress" value="localhost"/>

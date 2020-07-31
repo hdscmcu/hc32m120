@@ -1,5 +1,13 @@
 version     date           comment
  1.0.0
+            Jul 31, 2020   1. CLK Add func. CLK_GetXtalStdFlag().
+                                  Remove Enable from func. CLK_MCOConfig().
+                           2. DMA Eliminate impact on other bits in func. DMA_LlpInit().
+                           3. EFM Add wait RDY at start of func. EFM_SetOperateMode().
+                           4. Some typo in dma sample & pwc sample  
+
+            Jul 27, 2020   1. Correct macro define of CTC driver:IS_CTC_OFFSET_VAL
+
             Mar 14, 2020   1. Delete unused macro-define for EMB driver
 
             Feb 28, 2020   1. Some typo in PWC/CLK
@@ -35,7 +43,7 @@ version     date           comment
 
             Dec 11, 2019   1. Add timeout function for timer0
 
-            Nov 04, 2019   1. TX empty interrupt IRQ callback disable TX empyt interrupt 
+            Nov 04, 2019   1. TX empty interrupt IRQ callback disable TX empty interrupt 
                                when buffer data is empty for UART interrupt sample.[usart];
 
             Oct 22, 2019   1. the first release for hc32m120 series DDL(Device Driver Library)

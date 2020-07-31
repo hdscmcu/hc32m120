@@ -7,6 +7,8 @@
    Change Logs:
    Date             Author          Notes
    2019-06-24       Chengy          First version
+   2020-02-28       Chengy          Modified CLK_REG_WRITE_ENABLE/DISABLE 
+                                    #Elimate impact on other bits
  @endverbatim
  *******************************************************************************
  * Copyright (C) 2016, Huada Semiconductor Co., Ltd. All rights reserved.
@@ -402,6 +404,8 @@ en_result_t CLK_LRCInit(uint8_t LRCState);
 
 en_result_t CLK_XtalStdStrucInit(stc_clk_xtalstd_init_t* pstcXtalStd);
 en_result_t CLK_XTALStdInit(const stc_clk_xtalstd_init_t* pstcXtalStd);
+void CLK_ClearXtalStdFlag(void);
+en_flag_status_t CLK_GetXtalStdFlag(void);
 
 void CLK_SetSysclkSrc(uint8_t u8Src);
 void CLK_SetSysclkDiv(uint8_t u8Div);
@@ -412,7 +416,6 @@ void CLK_FcgPeriphClockCmd(uint32_t u32FcgPeriph, en_functional_state_t enNewSta
 void CLK_MCOConfig(uint8_t CLK_MCOSource, uint8_t CLK_MCODiv);
 void CLK_MCOCmd(en_functional_state_t enNewState);
 
-void CLK_ClearXtalStdFlag(void);
 en_flag_status_t CLK_GetStableFlag(uint8_t u8Flag);
 
 /**

@@ -1,14 +1,16 @@
 /**
  *******************************************************************************
  * @file  hc32m120_dma.c
- * @brief This file provides firmware functions to manage the Dynamic Memory
+ * @brief This file provides firmware functions to manage the Direct Memory
  *        Access (DMA).
  @verbatim
    Change Logs:
    Date             Author          Notes
    2019-07-08       Chengy          First version
-   2020-02-13       Chengy          Modified register INTCLR1 to INTCLR0 in 
-                                    function DMA_ClearErrFlag()
+   2020-02-13       Chengy          Modified register INTCLR1 as INTCLR0 in
+                                        function DMA_ClearErrFlag.
+   2020-02-24       Chengy          Bug fixed# Eliminate impact on other bits in
+                                        function DMA_LlpInit.
    2020-02-27       Zhangxl         Use new macro in hc32_common.h
  @endverbatim
  *******************************************************************************
@@ -67,7 +69,7 @@
 
 /**
  * @defgroup DDL_DMA DMA
- * @brief Dynamic Memory Access Driver Library
+ * @brief Direct Memory Access Driver Library
  * @{
  */
 
@@ -86,6 +88,8 @@
  */
 #define DMA_CH_REG(reg_base, ch)    (*(volatile uint32_t *)((uint32_t)(&(reg_base)) + ((ch) * 0x40ul)))
 
+/* Linked_list_pointer descriptor address mask */
+#define DMA_LLP_MASK                0x00000FFCUL
 /**
  * @defgroup DMA_Check_Parameters_Validity DMA Check Parameters Validity
  * @{
@@ -192,7 +196,7 @@ void DMA_Cmd(en_functional_state_t enNewState)
     DDL_ASSERT(IS_FUNCTIONAL_STATE(enNewState));
 
     /* Enable or Disable DMA */
-    MODIFY_REG(M0P_DMA->EN, DMA_EN_EN, enNewState);
+    MODIFY_REG32(M0P_DMA->EN, DMA_EN_EN, enNewState);
 }
 
 /**
@@ -302,19 +306,19 @@ void DMA_ChannelCfg(uint8_t u8Ch, const stc_dma_ch_cfg_t* pstcChCfg)
     DDL_ASSERT(IS_VALID_DMA_DADDR_MODE(pstcChCfg->u32DesInc));
 
     /* Set data width, transfer count, block size. */
-    MODIFY_REG(DMA_CH_REG(M0P_DMA->CH0CTL0, u8Ch),
+    MODIFY_REG32(DMA_CH_REG(M0P_DMA->CH0CTL0, u8Ch),
                DMA_CH0CTL0_BLKSIZE | DMA_CH0CTL0_CNT |DMA_CH0CTL0_HSIZE,
                pstcChCfg->u32BlockSize |
                (pstcChCfg->u32TransferCnt << DMA_CH0CTL0_CNT_POS) |
                pstcChCfg->u32DataWidth);
     /* Set source & destination address increment mode */
-    MODIFY_REG(DMA_CH_REG(M0P_DMA->CH0CTL1, u8Ch),
+    MODIFY_REG32(DMA_CH_REG(M0P_DMA->CH0CTL1, u8Ch),
                DMA_CH0CTL1_SINC | DMA_CH0CTL1_DINC,
                pstcChCfg->u32SrcInc | pstcChCfg->u32DesInc);
     /* Set source address. */
-    WRITE_REG(DMA_CH_REG(M0P_DMA->SAR0, u8Ch), pstcChCfg->u32SrcAddr);
+    WRITE_REG32(DMA_CH_REG(M0P_DMA->SAR0, u8Ch), pstcChCfg->u32SrcAddr);
     /* Set destination address. */
-    WRITE_REG(DMA_CH_REG(M0P_DMA->DAR0, u8Ch), pstcChCfg->u32DesAddr);
+    WRITE_REG32(DMA_CH_REG(M0P_DMA->DAR0, u8Ch), pstcChCfg->u32DesAddr);
 }
 
 /**
@@ -333,7 +337,7 @@ void DMA_RepeatInit(uint8_t u8Ch, uint32_t u32RptSel, uint32_t u32Cnt)
     DDL_ASSERT(IS_VALID_DMA_RPT_SEL(u32RptSel));
 
     /* Set repeat selection & repeat count, and enable repeat transfer */
-    MODIFY_REG(DMA_CH_REG(M0P_DMA->CH0CTL1, u8Ch),
+    MODIFY_REG32(DMA_CH_REG(M0P_DMA->CH0CTL1, u8Ch),
                DMA_CH0CTL1_RPTNSEN | DMA_CH0CTL1_RPTNSSEL | DMA_CH0CTL1_RPTNSCNT,
                DMA_RPTNSSEL_ENABLE | u32RptSel | u32Cnt << DMA_CH0CTL1_RPTNSCNT_POS);
 }
@@ -355,7 +359,7 @@ void DMA_NonSeqInit(uint8_t u8Ch, uint32_t u32NSeqSel, uint32_t u32Offset, uint3
     DDL_ASSERT(IS_VALID_DMA_NSEQ_SEL(u32NSeqSel));
 
     /* Set non_sequence selection & offset, and enable non_sequence transfer */
-    MODIFY_REG(DMA_CH_REG(M0P_DMA->CH0CTL1, u8Ch),
+    MODIFY_REG32(DMA_CH_REG(M0P_DMA->CH0CTL1, u8Ch),
                DMA_CH0CTL1_RPTNSEN | DMA_CH0CTL1_RPTNSSEL | DMA_CH0CTL1_RPTNSCNT | DMA_CH0CTL1_OFFSET,
                DMA_RPTNSSEL_ENABLE | u32NSeqSel | u32Cnt << DMA_CH0CTL1_RPTNSCNT_POS |
                u32Offset << DMA_CH0CTL1_OFFSET_POS);
@@ -377,9 +381,10 @@ void DMA_LlpInit(uint8_t u8Ch, uint32_t u32LlpRun, uint32_t u32Llp)
     DDL_ASSERT(IS_VALID_DMA_LLP_MODE(u32LlpRun));
 
     /* Set llp mode & next descriptor address, and enable llp transfer */
-    MODIFY_REG(DMA_CH_REG(M0P_DMA->CH0CTL0, u8Ch),
+    MODIFY_REG32(DMA_CH_REG(M0P_DMA->CH0CTL0, u8Ch),
                DMA_LLP_ENABLE | DMA_CH0CTL0_LLPRUN | DMA_CH0CTL0_LLP,
-               DMA_LLP_ENABLE | u32LlpRun | u32Llp << (DMA_CH0CTL0_LLP_POS - 2ul));
+               DMA_LLP_ENABLE | u32LlpRun |
+               ((u32Llp & DMA_LLP_MASK) << (DMA_CH0CTL0_LLP_POS - 2ul)));
 }
 
 /**
@@ -394,7 +399,7 @@ void DMA_SetSrcAddress(uint8_t u8Ch, uint32_t u32Address)
     DDL_ASSERT(IS_VALID_DMA_CH(u8Ch));
 
     /* Set source address. */
-    WRITE_REG(DMA_CH_REG(M0P_DMA->SAR0, u8Ch), u32Address);
+    WRITE_REG32(DMA_CH_REG(M0P_DMA->SAR0, u8Ch), u32Address);
 }
 
 /**
@@ -409,7 +414,7 @@ void DMA_SetDesAddress(uint8_t u8Ch, uint32_t u32Address)
     DDL_ASSERT(IS_VALID_DMA_CH(u8Ch));
 
     /* Set destination address. */
-    WRITE_REG(DMA_CH_REG(M0P_DMA->DAR0, u8Ch), u32Address);
+    WRITE_REG32(DMA_CH_REG(M0P_DMA->DAR0, u8Ch), u32Address);
 }
 
 /**
@@ -424,7 +429,7 @@ void DMA_SetBlockSize(uint8_t u8Ch, uint8_t u8BlkSize)
     DDL_ASSERT(IS_VALID_DMA_CH(u8Ch));
 
     /* Set block size. */
-    MODIFY_REG(DMA_CH_REG(M0P_DMA->CH0CTL0, u8Ch), DMA_CH0CTL0_BLKSIZE, u8BlkSize);
+    MODIFY_REG32(DMA_CH_REG(M0P_DMA->CH0CTL0, u8Ch), DMA_CH0CTL0_BLKSIZE, u8BlkSize);
 }
 
 /**
@@ -439,7 +444,7 @@ void DMA_SetTransferCnt(uint8_t u8Ch, uint8_t u8Cnt)
     DDL_ASSERT(IS_VALID_DMA_CH(u8Ch));
 
     /* Set transfer count. */
-    MODIFY_REG(DMA_CH_REG(M0P_DMA->CH0CTL0, u8Ch),
+    MODIFY_REG32(DMA_CH_REG(M0P_DMA->CH0CTL0, u8Ch),
                DMA_CH0CTL0_CNT,
                (uint32_t)u8Cnt << DMA_CH0CTL0_CNT_POS);
 }
@@ -458,10 +463,10 @@ void DMA_SetTriggerSrc( uint8_t u8Ch, en_event_src_t enSrc)
     switch (u8Ch)
     {
         case DMA_CHANNEL_0:
-            WRITE_REG(M0P_AOS->DMA0_TRGSEL, enSrc);
+            WRITE_REG32(M0P_AOS->DMA0_TRGSEL, enSrc);
             break;
         case DMA_CHANNEL_1:
-            WRITE_REG(M0P_AOS->DMA1_TRGSEL, enSrc);
+            WRITE_REG32(M0P_AOS->DMA1_TRGSEL, enSrc);
             break;
     }
 }

@@ -7,6 +7,8 @@
    Change Logs:
    Date             Author          Notes
    2019-06-03       Wuze            First version
+   2020-06-24       Wuze            Re-implemented SPI_GetFlag and SPI_ClearFlag as
+                                    normal functions in C file.
  @endverbatim
  *******************************************************************************
  * Copyright (C) 2016, Huada Semiconductor Co., Ltd. All rights reserved.
@@ -298,7 +300,6 @@ typedef struct
                                      SPI_FLAG_RX_BUFFER_FULL)
 
 #define SPI_FLAG_CLR_ALL            (SPI_FLAG_OVERLOAD          |   \
-                                     SPI_FLAG_IDLE              |   \
                                      SPI_FLAG_MODE_FAULT        |   \
                                      SPI_FLAG_PARITY_ERROR      |   \
                                      SPI_FLAG_UNDERLOAD)
@@ -336,52 +337,6 @@ __STATIC_INLINE void SPI_FunctionCmd(en_functional_state_t enNewState)
 }
 
 /**
- * @brief  SPI get state flag.
- * @param  [in]  u32Flag        SPI state flag.
- *                              This parameter can be a value of @ref SPI_State_Flag
- *   @arg  SPI_FLAG_OVERLOAD
- *   @arg  SPI_FLAG_IDLE
- *   @arg  SPI_FLAG_MODE_FAULT
- *   @arg  SPI_FLAG_PARITY_ERROR
- *   @arg  SPI_FLAG_UNDERLOAD
- *   @arg  SPI_FLAG_TX_BUFFER_EMPTY
- *   @arg  SPI_FLAG_RX_BUFFER_FULL
- *   @arg  SPI_FLAG_ALL
- * @retval An en_flag_status_t enumeration.
- *   @arg  Set: The specified flag has set.
- *   @arg  Reset: The specified flag has not set.
- */
-__STATIC_INLINE en_flag_status_t SPI_GetFlag(uint32_t u32Flag)
-{
-    en_flag_status_t enFlag = Reset;
-
-    if ((M0P_SPI->SR & u32Flag) != 0u)
-    {
-        enFlag = Set;
-    }
-
-    return enFlag;
-}
-
-/**
- * @brief  SPI clear state flag.
- * @param  [in]  u32Flag        SPI state flag.
- *                              This parameter can be values of @ref SPI_State_Flag.
- *   @arg  SPI_FLAG_OVERLOAD
- *   @arg  SPI_FLAG_IDLE
- *   @arg  SPI_FLAG_MODE_FAULT
- *   @arg  SPI_FLAG_PARITY_ERROR
- *   @arg  SPI_FLAG_UNDERLOAD
- *   @arg  SPI_FLAG_CLR_ALL
- * @retval None
- */
-__STATIC_INLINE void SPI_ClearFlag(uint32_t u32Flag)
-{
-    u32Flag &= SPI_FLAG_CLR_ALL;
-    M0P_SPI->SR &= (uint32_t)(~u32Flag);
-}
-
-/**
  * @brief  Read SPI data register.
  * @param  None
  * @retval A 32-bit data of SPI data register.
@@ -411,6 +366,9 @@ void SPI_IntCmd(uint32_t u32IntType, en_functional_state_t enNewState);
 en_result_t SPI_Transmit(const void *pvTxBuf, uint32_t u32TxLength);
 en_result_t SPI_Receive(void *pvRxBuf, uint32_t u32RxLength);
 en_result_t SPI_TransmitReceive(const void *pvTxBuf, void *pvRxBuf, uint32_t u32Length);
+
+en_flag_status_t SPI_GetFlag(uint32_t u32Flag);
+void SPI_ClearFlag(uint32_t u32Flag);
 
 /**
  * @}

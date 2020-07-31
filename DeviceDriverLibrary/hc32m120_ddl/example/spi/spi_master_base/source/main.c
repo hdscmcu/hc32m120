@@ -6,6 +6,7 @@
    Change Logs:
    Date             Author          Notes
    2019-06-05       Wuze            First version
+   2020-06-24       Wuze            Changed default mode to master 3-wire mode.
  @endverbatim
  *******************************************************************************
  * Copyright (C) 2016, Huada Semiconductor Co., Ltd. All rights reserved.
@@ -73,7 +74,7 @@
  * Local pre-processor symbols/macros ('#define')
  ******************************************************************************/
 /* Slave test definition. */
-#define SLAVE_TEST
+//#define SLAVE_TEST
 
 /* SPI pin group definition. */
 #define SPI_PIN_GROUP_A             (1u)
@@ -105,7 +106,7 @@
 /* SPI wire mode definition. */
 #define SPI_APP_3_WIRE              (3u)
 #define SPI_APP_4_WIRE              (4u)
-#define SPI_APP_X_WIRE              (SPI_APP_4_WIRE)
+#define SPI_APP_X_WIRE              (SPI_APP_3_WIRE)
 
 #if (SPI_APP_X_WIRE == SPI_APP_4_WIRE)
 #define SPI_WIRE_MODE               (SPI_WIRE_4)
@@ -117,12 +118,12 @@
 #else
 #define SPI_SPI_MODE                (SPI_MODE_1)    /*!< Depends on your application. */
 #endif
-//#define SPI_APP_CUSTOM_NSS
+#define SPI_APP_CUSTOM_NSS
 #endif // #if (SPI_APP_X_WIRE == SPI_APP_4_WIRE)
 
 #ifdef SPI_APP_CUSTOM_NSS
-#define SPI_CUSTOM_NSS_PORT         (GPIO_PORT_2)
-#define SPI_CUSTOM_NSS_PIN          (GPIO_PIN_0)
+#define SPI_CUSTOM_NSS_PORT         (SPI_NSS_PORT)
+#define SPI_CUSTOM_NSS_PIN          (SPI_NSS_PIN)
 
 //#define SPI_APP_RECEIVE_WHILE_TRANSMIT
 #endif // #ifdef SPI_APP_CUSTOM_NSS

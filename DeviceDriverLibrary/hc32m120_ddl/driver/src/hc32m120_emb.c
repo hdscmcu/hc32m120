@@ -7,6 +7,7 @@
    Change Logs:
    Date             Author          Notes
    2019-06-27       Hongjh          First version
+   2020-03-14       Hongjh          Delete unused macro-define
  @endverbatim
  *******************************************************************************
  * Copyright (C) 2016, Huada Semiconductor Co., Ltd. All rights reserved.
@@ -86,10 +87,6 @@
  * @defgroup EMB_Check_Parameters_Validity EMB Check Parameters Validity
  * @{
  */
-
-#define IS_VALID_TIMER4_CNT_INT(x)                                             \
-(   ((x) == TIMER4_CNT_IT_ZERO)                 ||                             \
-    ((x) == TIMER4_CNT_IT_PEAK))
 
 #define IS_VALID_EMB_PORT_LEVEL(x)                                             \
 (   ((x) == EMB_PORT_LEVEL_LOW)                 ||                             \

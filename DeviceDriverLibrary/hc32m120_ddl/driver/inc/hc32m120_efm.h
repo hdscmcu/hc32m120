@@ -386,7 +386,7 @@ void EFM_InterruptCmd(uint32_t u32EfmInt, en_functional_state_t enNewState);
 en_result_t EFM_StrucInit(stc_efm_cfg_t *pstcEfmCfg);
 en_result_t EFM_Config(const stc_efm_cfg_t *pstcEfmCfg);
 
-void EFM_SetOperateMode(uint32_t u32PeMode);
+en_result_t EFM_SetOperateMode(uint32_t u32PeMode);
 en_result_t EFM_ProgramWord(uint32_t u32Addr, uint32_t u32Data);
 en_result_t EFM_ProgramHalfWord(uint32_t u32Addr, uint16_t u16Data);
 en_result_t EFM_ProgramByte(uint32_t u32Addr, uint8_t u8Data);

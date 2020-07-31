@@ -1,6 +1,6 @@
  /*******************************************************************************
  * @file  dmac/dmac_repeat/source/main.c
- * @brief This example demonstrates TIMERA base count function.
+ * @brief This example demonstrates DMA repeat function.
  @verbatim
    Change Logs:
    Date             Author          Notes

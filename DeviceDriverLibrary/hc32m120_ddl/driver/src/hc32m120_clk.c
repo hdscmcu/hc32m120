@@ -9,6 +9,9 @@
    2020-02-14       Zhangxl         Use CLEAR_REG8_BIT for CLK_ClearXtalStdFlag()
                                     instead of CLEAR_REG8
    2020-02-27       Zhangxl         Use new macro in hc32_common.h
+   2020-07-07       Chengy          Add func.CLK_GetXtalStdFlag()
+                                    Remove Enable from func. CLK_MCOConfig()
+                                    Modified spell error
  @endverbatim
  *******************************************************************************
  * Copyright (C) 2016, Huada Semiconductor Co., Ltd. All rights reserved.
@@ -89,7 +92,7 @@
 
 
 /**
- * @defgroup RTC_Check_Parameters_Validity RTC Check Parameters Validity
+ * @defgroup CLK_Check_Parameters_Validity CLK Check Parameters Validity
  * @{
  */
 /* Paramer valid check for XTAL state */
@@ -150,7 +153,7 @@
 (       ((STA) == CLK_HRC_OFF)                      ||                         \
         ((STA) == CLK_HRC_ON))
 
-/* Paramer valid check for HRC state */
+/* Paramer valid check for HRC frequency select */
 #define IS_VALID_CLK_HRC_FREQ_SEL(SEL)                                         \
  (      ((SEL) == CLK_HRCFREQ_32)                   ||                         \
         ((SEL) == CLK_HRCFREQ_16)                   ||                         \
@@ -290,7 +293,7 @@ void CLK_DeInit(void)
 
 /**
  * @brief  Init Xtal initial structure with default value.
- * @param  pstcXtal specifies the paramer of XTAL.
+ * @param  pstcXtal specifies the parameter of XTAL.
  *            @arg    u8XtalState  : The new state of the XTAL.
  *            @arg    u8XtalMode   : The XTAL mode selection osc or exclk.
  *            @arg    u8XtalDrv    : The XTAL drive ability.
@@ -324,7 +327,7 @@ en_result_t CLK_XtalStrucInit(stc_clk_xtal_init_t* pstcXtal)
 
 /**
   * @brief  Initialise the XTAL.
-  * @param  pstcXtal specifies the paramer of XTAL.
+  * @param  pstcXtal specifies the parameter of XTAL.
   *            @arg    u8XtalState  : The new state of the XTAL.
   *            @arg    u8XtalMode   : The XTAL mode selection osc or exclk.
   *            @arg    u8XtalDrv    : The XTAL drive ability.
@@ -555,7 +558,7 @@ en_result_t CLK_LRCInit(uint8_t LRCState)
 
 /**
  * @brief  Init XtalStd initial structure with default value.
- * @param  pstcXtalStd specifies the paramer of XTALSTD.
+ * @param  pstcXtalStd specifies the parameter of XTALSTD.
  *            @arg    u8XtalStdState:   The new state of the XTALSTD.
  *            @arg    u8XtalStdMode:    The XTAL status detection occur interrupt or reset.
  *            @arg    u8XtalStdInt:     The XTAL status detection interrupt on or off.
@@ -587,12 +590,15 @@ en_result_t CLK_XtalStdStrucInit(stc_clk_xtalstd_init_t* pstcXtalStd)
 
 /**
  * @brief  Initialise the XTAL status detection.
- * @param  pstcXtalStd specifies the paramer of XTALSTD.
+ * @param  pstcXtalStd specifies the parameter of XTALSTD.
  *            @arg    u8XtalStdState:   The new state of the XTALSTD.
  *            @arg    u8XtalStdMode:    The XTAL status detection occur interrupt or reset.
  *            @arg    u8XtalStdInt:     The XTAL status detection interrupt on or off.
  *            @arg    u8XtalStdRst:     The XTAL status detection reset on or off.
- * @retval None
+ * @retval An en_result_t enumeration value:
+ *           - Ok: Initialize success
+ *           - ErrorInvalidParameter: Invalid parameter
+ * 
  */
 en_result_t CLK_XTALStdInit(const stc_clk_xtalstd_init_t* pstcXtalStd)
 {
@@ -776,7 +782,7 @@ void CLK_FcgPeriphClockCmd(uint32_t u32FcgPeriph, en_functional_state_t enNewSta
  *            @arg CLK_MCOSOURCCE_LRC:       LRC clock selected as MCOx source
  *            @arg CLK_MCOSOURCCE_XTAL:      XTAL clock selected as MCOx source
  *            @arg CLK_MCOSOURCCE_SYSCLK:    System clock(SYSCLK) selected as MCOx source
- * @param  CLK_MCODiv specifies the MCOx prescaler.
+ * @param  CLK_MCODiv specifies the MCOx divider.
  *          This parameter can be one of the following values:
  *            @arg CLK_MCODIV_1:   no division applied to MCOx clock
  *            @arg CLK_MCODIV_2:   division by 2 applied to MCOx clock
@@ -797,8 +803,8 @@ void CLK_MCOConfig(uint8_t CLK_MCOSource, uint8_t CLK_MCODiv)
     /* Enable register write. */
     CLK_REG_WRITE_ENABLE();
 
-    /* Configure the MCO and Enable MCO */
-    M0P_CMU->MCO1CFGR = (CMU_MCO1CFGR_MCO1EN | CLK_MCODiv | CLK_MCOSource);
+    /* Configure the MCO */
+    M0P_CMU->MCO1CFGR = (CLK_MCODiv | CLK_MCOSource);
 
     /* Disbale register write. */
     CLK_REG_WRITE_DISABLE();
@@ -846,6 +852,17 @@ void CLK_ClearXtalStdFlag(void)
     /* Disbale register write. */
     CLK_REG_WRITE_DISABLE();
 }
+
+/**
+ * @brief  Get the xtal error flag.
+ * @param  None
+ * @retval en_flag_status_t
+ */
+en_flag_status_t CLK_GetXtalStdFlag(void)
+{
+    return(READ_REG8_BIT(M0P_CMU->XTALSTDSR, CMU_XTALSTDSR_XTALSTDF) ? Set : Reset);
+}
+
 /**
  * @brief  Get the clock stable flag.
  * @param  u8Flag  specifies the clock stable flag.
