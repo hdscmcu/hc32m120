@@ -1,5 +1,7 @@
 version     date           comment
  1.0.0
+            Aug 28,2020    1. Update headfile for i2c DTR and DRR register.
+
             Jul 31, 2020   1. CLK Add func. CLK_GetXtalStdFlag().
                                   Remove Enable from func. CLK_MCOConfig().
                            2. DMA Eliminate impact on other bits in func. DMA_LlpInit().

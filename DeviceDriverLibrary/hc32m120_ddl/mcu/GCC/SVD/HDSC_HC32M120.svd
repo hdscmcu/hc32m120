@@ -761,6 +761,24 @@
                     </fields>
                 </register>
                 <register>
+                    <name>TMR0_HTSSR</name>
+                    <description>desc TMR0_HTSSR</description>
+                    <addressOffset>0x20</addressOffset>
+                    <size>32</size>
+                    <access>read-write</access>
+                    <resetValue>0x7F</resetValue>
+                    <resetMask>0x7F</resetMask>
+                    <fields>
+                        <field>
+                            <name>TRGSEL</name>
+                            <description>desc TRGSEL</description>
+                            <msb>6</msb>
+                            <lsb>0</lsb>
+                            <access>read-write</access>
+                        </field>
+                    </fields>
+                </register>
+                <register>
                     <name>TMR2_HTSSR</name>
                     <description>desc TMR2_HTSSR</description>
                     <addressOffset>0x20</addressOffset>
@@ -2602,6 +2620,24 @@
                     </fields>
                 </register>
                 <register>
+                    <name>CHENCLR</name>
+                    <description>desc CHENCLR</description>
+                    <addressOffset>0x3C</addressOffset>
+                    <size>32</size>
+                    <access>read-write</access>
+                    <resetValue>0x0</resetValue>
+                    <resetMask>0x3</resetMask>
+                    <fields>
+                        <field>
+                            <name>CHENCLR</name>
+                            <description>desc CHENCLR</description>
+                            <msb>1</msb>
+                            <lsb>0</lsb>
+                            <access>read-write</access>
+                        </field>
+                    </fields>
+                </register>
+                <register>
                     <name>SAR0</name>
                     <description>desc SAR0</description>
                     <addressOffset>0x40</addressOffset>
@@ -3985,7 +4021,7 @@
                     <name>DTR</name>
                     <description>desc DTR</description>
                     <addressOffset>0x24</addressOffset>
-                    <size>32</size>
+                    <size>8</size>
                     <access>read-write</access>
                     <resetValue>0xFF</resetValue>
                     <resetMask>0xFF</resetMask>
@@ -4003,7 +4039,7 @@
                     <name>DRR</name>
                     <description>desc DRR</description>
                     <addressOffset>0x28</addressOffset>
-                    <size>32</size>
+                    <size>8</size>
                     <access>read-write</access>
                     <resetValue>0x0</resetValue>
                     <resetMask>0xFF</resetMask>
@@ -12166,8 +12202,8 @@
                             <access>read-write</access>
                         </field>
                         <field>
-                            <name>RPERF</name>
-                            <description>desc RPERF</description>
+                            <name>RPEF</name>
+                            <description>desc RPEF</description>
                             <msb>5</msb>
                             <lsb>5</lsb>
                             <access>read-write</access>

@@ -4021,7 +4021,7 @@
                     <name>DTR</name>
                     <description>desc DTR</description>
                     <addressOffset>0x24</addressOffset>
-                    <size>32</size>
+                    <size>8</size>
                     <access>read-write</access>
                     <resetValue>0xFF</resetValue>
                     <resetMask>0xFF</resetMask>
@@ -4039,7 +4039,7 @@
                     <name>DRR</name>
                     <description>desc DRR</description>
                     <addressOffset>0x28</addressOffset>
-                    <size>32</size>
+                    <size>8</size>
                     <access>read-write</access>
                     <resetValue>0x0</resetValue>
                     <resetMask>0xFF</resetMask>

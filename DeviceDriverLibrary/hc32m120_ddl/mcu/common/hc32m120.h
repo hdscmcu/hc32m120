@@ -5,7 +5,7 @@
  @verbatim
    Change Logs:
    Date             Author          Notes
-   2019-10-10       chengy          First version
+   2020-08-27       chengy          First version
  @endverbatim
  *******************************************************************************
  * Copyright (C) 2017, Huada Semiconductor Co.,Ltd All rights reserved.
@@ -56,7 +56,7 @@
  **
  ** History:
  **
- **   - 2019-10-10  1.0   First version for Device Driver Library of HC32M120 series MCU.
+ **   - 2020-08-27  1.0   First version for Device Driver Library of HC32M120 series MCU.
  **
  ******************************************************************************/
 
@@ -1123,14 +1123,12 @@ typedef struct
 
 typedef struct
 {
-    __IO uint32_t DT                        : 8;
-    uint32_t RESERVED8                      :24;
+    __IO uint8_t DT                         : 8;
 } stc_i2c_dtr_field_t;
 
 typedef struct
 {
-    __IO uint32_t DR                        : 8;
-    uint32_t RESERVED8                      :24;
+    __IO uint8_t DR                         : 8;
 } stc_i2c_drr_field_t;
 
 typedef struct
@@ -3362,14 +3360,16 @@ typedef struct
     };
     union
     {
-        __IO uint32_t DTR;
+        __IO uint8_t DTR;
         stc_i2c_dtr_field_t DTR_f;
     };
+    uint8_t RESERVED2[3];
     union
     {
-        __IO uint32_t DRR;
+        __IO uint8_t DRR;
         stc_i2c_drr_field_t DRR_f;
     };
+    uint8_t RESERVED3[3];
     union
     {
         __IO uint32_t CCR;
@@ -6393,27 +6393,27 @@ typedef struct
 
 /*  Bit definition for I2C_DTR register  */
 #define I2C_DTR_DT_POS                       (0U)
-#define I2C_DTR_DT                           ((uint32_t)0x000000FFU)
-#define I2C_DTR_DT_0                         ((uint32_t)0x00000001U)
-#define I2C_DTR_DT_1                         ((uint32_t)0x00000002U)
-#define I2C_DTR_DT_2                         ((uint32_t)0x00000004U)
-#define I2C_DTR_DT_3                         ((uint32_t)0x00000008U)
-#define I2C_DTR_DT_4                         ((uint32_t)0x00000010U)
-#define I2C_DTR_DT_5                         ((uint32_t)0x00000020U)
-#define I2C_DTR_DT_6                         ((uint32_t)0x00000040U)
-#define I2C_DTR_DT_7                         ((uint32_t)0x00000080U)
+#define I2C_DTR_DT                           ((uint8_t)0xFFU)
+#define I2C_DTR_DT_0                         ((uint8_t)0x01U)
+#define I2C_DTR_DT_1                         ((uint8_t)0x02U)
+#define I2C_DTR_DT_2                         ((uint8_t)0x04U)
+#define I2C_DTR_DT_3                         ((uint8_t)0x08U)
+#define I2C_DTR_DT_4                         ((uint8_t)0x10U)
+#define I2C_DTR_DT_5                         ((uint8_t)0x20U)
+#define I2C_DTR_DT_6                         ((uint8_t)0x40U)
+#define I2C_DTR_DT_7                         ((uint8_t)0x80U)
 
 /*  Bit definition for I2C_DRR register  */
 #define I2C_DRR_DR_POS                       (0U)
-#define I2C_DRR_DR                           ((uint32_t)0x000000FFU)
-#define I2C_DRR_DR_0                         ((uint32_t)0x00000001U)
-#define I2C_DRR_DR_1                         ((uint32_t)0x00000002U)
-#define I2C_DRR_DR_2                         ((uint32_t)0x00000004U)
-#define I2C_DRR_DR_3                         ((uint32_t)0x00000008U)
-#define I2C_DRR_DR_4                         ((uint32_t)0x00000010U)
-#define I2C_DRR_DR_5                         ((uint32_t)0x00000020U)
-#define I2C_DRR_DR_6                         ((uint32_t)0x00000040U)
-#define I2C_DRR_DR_7                         ((uint32_t)0x00000080U)
+#define I2C_DRR_DR                           ((uint8_t)0xFFU)
+#define I2C_DRR_DR_0                         ((uint8_t)0x01U)
+#define I2C_DRR_DR_1                         ((uint8_t)0x02U)
+#define I2C_DRR_DR_2                         ((uint8_t)0x04U)
+#define I2C_DRR_DR_3                         ((uint8_t)0x08U)
+#define I2C_DRR_DR_4                         ((uint8_t)0x10U)
+#define I2C_DRR_DR_5                         ((uint8_t)0x20U)
+#define I2C_DRR_DR_6                         ((uint8_t)0x40U)
+#define I2C_DRR_DR_7                         ((uint8_t)0x80U)
 
 /*  Bit definition for I2C_CCR register  */
 #define I2C_CCR_SLOWW_POS                    (0U)
@@ -12003,7 +12003,6 @@ typedef struct
     __IO uint32_t DT5;
     __IO uint32_t DT6;
     __IO uint32_t DT7;
-    uint32_t RESERVED0[24];
 } stc_i2c_dtr_bit_t;
 
 typedef struct
@@ -12016,7 +12015,6 @@ typedef struct
     __IO uint32_t DR5;
     __IO uint32_t DR6;
     __IO uint32_t DR7;
-    uint32_t RESERVED0[24];
 } stc_i2c_drr_bit_t;
 
 typedef struct
@@ -14940,7 +14938,9 @@ typedef struct
     stc_i2c_sr_bit_t                         SR_b;
     stc_i2c_clr_bit_t                        CLR_b;
     stc_i2c_dtr_bit_t                        DTR_b;
+    uint32_t                                 RESERVED2[24];
     stc_i2c_drr_bit_t                        DRR_b;
+    uint32_t                                 RESERVED3[24];
     stc_i2c_ccr_bit_t                        CCR_b;
     stc_i2c_fltr_bit_t                       FLTR_b;
 } bM0P_I2C_TypeDef;

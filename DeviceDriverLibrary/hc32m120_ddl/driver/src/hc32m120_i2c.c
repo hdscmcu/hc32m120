@@ -8,6 +8,7 @@
    Date             Author          Notes
    2019-07-09       Wangmin         First version
    2020-02-28       Wangmin         Modify after hc32_common.h changed.
+   2020-08-27       Wangmin         Modify for register DTR,DRR width changed in headfile.
  @endverbatim
  *******************************************************************************
  * Copyright (C) 2016, Huada Semiconductor Co., Ltd. All rights reserved.
@@ -521,7 +522,7 @@ void I2C_SendData( uint8_t u8Data)
  */
 uint8_t I2C_ReadData(void)
 {
-    return (uint8_t)M0P_I2C->DRR;
+    return M0P_I2C->DRR;
 }
 
 /**
