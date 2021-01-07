@@ -730,7 +730,7 @@
         </option>
         <option>
           <name>IlinkIcfFile</name>
-          <state>$PROJ_DIR$\hc32m120_ram.icf</state>
+          <state>$PROJ_DIR$\hc32m120.icf</state>
         </option>
         <option>
           <name>IlinkIcfFileSlave</name>
@@ -1622,7 +1622,7 @@
         </option>
         <option>
           <name>IlinkIcfFile</name>
-          <state>$PROJ_DIR$\hc32m120_ram.icf</state>
+          <state>$PROJ_DIR$\hc32m120.icf</state>
         </option>
         <option>
           <name>IlinkLibIOConfig</name>

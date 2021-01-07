@@ -1,5 +1,7 @@
 version     date           comment
  1.1.0
+            Jan 07, 2021   1. Replace INT_IIC_EE1 with INT_IIC_EEI for I2C samples.
+            
             Dec 15, 2020   1. Example uart_int: Fix bug of lossing TX data.
 
             Dec 09, 2020   1. Correct timeout process for clk driver.
