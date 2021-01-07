@@ -103,7 +103,7 @@ typedef struct
 {
     uint8_t     u8NmiFE;        /*!< NMI pin filter function, @ref NMI_FilterClock_Sel for details          */
     uint8_t     u8NmiFClk;      /*!< NMI pin filter clock  division, @ref NMI_FilterClock_Div for details   */
-    uint8_t     u8NmiTigger;    /*!< NMI pin trigger edge, @ref NMI_Trigger_Sel for details                 */
+    uint8_t     u8NmiTrigger;   /*!< NMI pin trigger edge, @ref NMI_Trigger_Sel for details                 */
     uint8_t     u8NmiSrc;       /*!< NMI trigger source, @ref NMI_TriggerSrc_Sel for details                */
     func_ptr_t  pfnNmiCallback; /*!< NMI Callback function pointers                                         */
 }stc_nmi_config_t;
@@ -403,7 +403,7 @@ en_flag_status_t NMI_GetNmiSrc(uint8_t u8NmiSrc);
 void NMI_ClrNmiSrc(uint8_t u8NmiSrc);
 
 en_result_t EXINT_Init(const stc_exint_config_t *pstcExIntConfig);
-en_result_t EXINT_StructInit(stc_exint_config_t *pstcExintConfig);
+en_result_t EXINT_StructInit(stc_exint_config_t *pstcExIntConfig);
 en_flag_status_t EXINT_GetExIntSrc(uint16_t u16ExIntCh);
 void EXINT_ClrExIntSrc(uint16_t u16ExIntCh);
 

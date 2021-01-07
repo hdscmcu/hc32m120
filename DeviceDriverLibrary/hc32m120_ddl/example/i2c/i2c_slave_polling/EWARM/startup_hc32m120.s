@@ -148,21 +148,6 @@ NMI_Handler
 HardFault_Handler
                 B       HardFault_Handler
 
-                PUBWEAK MemManage_Handler
-                SECTION .text:CODE:NOROOT:REORDER(1)
-MemManage_Handler
-                B       MemManage_Handler
-
-                PUBWEAK BusFault_Handler
-                SECTION .text:CODE:NOROOT:REORDER(1)
-BusFault_Handler
-                B       BusFault_Handler
-
-                PUBWEAK UsageFault_Handler
-                SECTION .text:CODE:NOROOT:REORDER(1)
-UsageFault_Handler
-                B       UsageFault_Handler
-
                 PUBWEAK SVC_Handler
                 SECTION .text:CODE:NOROOT:REORDER(1)
 SVC_Handler

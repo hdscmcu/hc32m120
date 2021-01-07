@@ -7,6 +7,7 @@
    Date             Author          Notes
    2019-06-28       Yangjp          First version
    2020-01-08       Wuze            Added function '_write' for printf in GCC compiler.
+   2020-12-03       Yangjp          Fixed SysTick_Delay function overflow handling
  @endverbatim
  *******************************************************************************
  * Copyright (C) 2016, Huada Semiconductor Co., Ltd. All rights reserved.
@@ -136,7 +137,7 @@ void DDL_Delay1ms(uint32_t u32Cnt)
 
 /**
  * @brief This function Initializes the interrupt frequency of the SysTick.
- * @param [in] u32Freq                  SysTick interrupt frequency.Value range 1 to 1000.
+ * @param [in] u32Freq                  SysTick interrupt frequency (1 to 1000).
  * @retval An en_result_t enumeration value:
  *           - Ok: SysTick Initializes succeed
  *           - Error: SysTick Initializes failed
@@ -145,7 +146,7 @@ __WEAKDEF en_result_t SysTick_Init(uint32_t u32Freq)
 {
     en_result_t enRet = Error;
 
-    if (u32Freq)
+    if ((0ul != u32Freq) && (u32Freq <= 1000ul))
     {
         u32TickStep = 1000ul / u32Freq;
         /* Configure the SysTick interrupt */
@@ -165,17 +166,26 @@ __WEAKDEF en_result_t SysTick_Init(uint32_t u32Freq)
  */
 __WEAKDEF void SysTick_Delay(uint32_t u32Delay)
 {
-    uint32_t tickStart = SysTick_GetTick();
-    uint32_t tickEnd = u32Delay;
+    const uint32_t tickStart = SysTick_GetTick();
+    uint32_t tickEnd;
+    uint32_t tickMax;
 
-    /* Add a freq to guarantee minimum wait */
-    if (tickEnd < 0xFFFFFFFFul)
+    if (u32TickStep != 0ul)
     {
-        tickEnd += u32TickStep;
-    }
+        tickMax = 0xFFFFFFFFul / u32TickStep * u32TickStep;
+        /* Add a freq to guarantee minimum wait */
+        if ((u32Delay >= tickMax) || ((tickMax - u32Delay) < u32TickStep))
+        {
+            tickEnd = tickMax;
+        }
+        else
+        {
+            tickEnd = u32Delay + u32TickStep;
+        }
 
-    while ((SysTick_GetTick() - tickStart) < tickEnd)
-    {
+        while ((SysTick_GetTick() - tickStart) < tickEnd)
+        {
+        }
     }
 }
 

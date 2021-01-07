@@ -12,6 +12,7 @@
                                     series.
    2020-02-17       Yangjp          Merge HC32F120, HC32F4A0, HC32M120, HC32M423
                                     series chips.
+   2020-09-07       Yangjp          Add the precompiled configuration of ARM compiler V6
  @endverbatim
  *******************************************************************************
  * Copyright (C) 2016, Huada Semiconductor Co., Ltd. All rights reserved.
@@ -185,7 +186,24 @@ typedef enum
   #define __UNUSED                      __attribute__((unused))
 #endif /* __UNUSED */
 
-#if defined ( __GNUC__ ) && !defined (__CC_ARM) /*!< GNU Compiler */
+#if defined (__ARMCC_VERSION) && (__ARMCC_VERSION >= 6010050)
+  #ifndef __WEAKDEF
+    #define __WEAKDEF                   __attribute__((weak))
+  #endif /* __WEAKDEF */
+  #ifndef __ALIGN_BEGIN
+    #define __ALIGN_BEGIN               __attribute__((aligned(4)))
+  #endif /* __ALIGN_BEGIN */
+  #ifndef __NOINLINE
+    #define __NOINLINE                  __attribute__((noinline))
+  #endif /* __NOINLINE */
+  #ifndef __RAM_FUNC
+    #define __RAM_FUNC                  __attribute__((long_call, section(".ramfunc")))
+    /* Usage: void __RAM_FUNC foo(void) */
+  #endif /* __RAM_FUNC */
+  #ifndef __NO_INIT
+    #define __NO_INIT
+  #endif /* __NO_INIT */
+#elif defined ( __GNUC__ ) && !defined (__CC_ARM) /*!< GNU Compiler */
   #ifndef __WEAKDEF
     #define __WEAKDEF                   __attribute__((weak))
   #endif /* __WEAKDEF */
@@ -199,11 +217,14 @@ typedef enum
     #define __RAM_FUNC                  __attribute__((long_call, section(".ramfunc")))
     /* Usage: void __RAM_FUNC foo(void) */
   #endif /* __RAM_FUNC */
+  #ifndef __NO_INIT
+    #define __NO_INIT                   __attribute__((section(".noinit")))
+  #endif /* __NO_INIT */
 #elif defined (__ICCARM__)                /*!< IAR Compiler */
   #ifndef __WEAKDEF
     #define __WEAKDEF                   __weak
-  #endif /* __WEAKDEF */    
-  #ifndef __ALIGN_BEGIN  
+  #endif /* __WEAKDEF */
+  #ifndef __ALIGN_BEGIN
     #define __ALIGN_BEGIN               _Pragma("data_alignment=4")
   #endif /* __ALIGN_BEGIN */
   #ifndef __NOINLINE
@@ -212,11 +233,14 @@ typedef enum
   #ifndef __RAM_FUNC
     #define __RAM_FUNC                  __ramfunc
   #endif /* __RAM_FUNC */
+#ifndef __NO_INIT
+    #define __NO_INIT                   __no_init
+#endif /* __NO_INIT */
 #elif defined (__CC_ARM)                /*!< ARM Compiler */
   #ifndef __WEAKDEF
     #define __WEAKDEF                   __attribute__((weak))
-  #endif /* __WEAKDEF */    
-  #ifndef __ALIGN_BEGIN  
+  #endif /* __WEAKDEF */
+  #ifndef __ALIGN_BEGIN
     #define __ALIGN_BEGIN               __align(4)
   #endif /* __ALIGN_BEGIN */
   #ifndef __NOINLINE
@@ -242,7 +266,18 @@ typedef enum
 #define BCD2DEC(x)                      ((((x) >> 4U) * 10U) + ((x) & 0x0FU))
 
 /* Returns the dimension of an array */
-#define ARRAY_SZ(x)                     (sizeof(x) / sizeof((x)[0]))
+#define ARRAY_SZ(x)                     ((sizeof(x)) / (sizeof((x)[0])))
+/**
+ * @}
+ */
+
+/**
+ * @defgroup Address_Align Address Align
+ * @{
+ */
+#define IS_ADDRESS_ALIGN(addr, align)   (0UL == (((uint32_t)(addr)) & (((uint32_t)(align)) - 1UL)))
+#define IS_ADDRESS_ALIGN_HALFWORD(addr) (0UL == (((uint32_t)(addr)) & 0x1UL))
+#define IS_ADDRESS_ALIGN_WORD(addr)     (0UL == (((uint32_t)(addr)) & 0x3UL))
 /**
  * @}
  */
@@ -251,13 +286,16 @@ typedef enum
  * @defgroup Register_Macro_Definitions Register Macro Definitions
  * @{
  */
+#define RW_MEM8(addr)                   (*(volatile uint8_t *)(addr))
+#define RW_MEM16(addr)                  (*(volatile uint16_t *)(addr))
+#define RW_MEM32(addr)                  (*(volatile uint32_t *)(addr))
 #define SET_REG8_BIT(REG, BIT)          ((REG) |= ((uint8_t)(BIT)))
 #define SET_REG16_BIT(REG, BIT)         ((REG) |= ((uint16_t)(BIT)))
 #define SET_REG32_BIT(REG, BIT)         ((REG) |= ((uint32_t)(BIT)))
 
-#define CLEAR_REG8_BIT(REG, BIT)        ((REG) &= ((uint8_t)(~(BIT))))
-#define CLEAR_REG16_BIT(REG, BIT)       ((REG) &= ((uint16_t)(~(BIT))))
-#define CLEAR_REG32_BIT(REG, BIT)       ((REG) &= ((uint32_t)(~(BIT))))
+#define CLEAR_REG8_BIT(REG, BIT)        ((REG) &= ((uint8_t)(~((uint8_t)(BIT)))))
+#define CLEAR_REG16_BIT(REG, BIT)       ((REG) &= ((uint16_t)(~((uint16_t)(BIT)))))
+#define CLEAR_REG32_BIT(REG, BIT)       ((REG) &= ((uint32_t)(~((uint32_t)(BIT)))))
 
 #define READ_REG8_BIT(REG, BIT)         ((REG) & ((uint8_t)(BIT)))
 #define READ_REG16_BIT(REG, BIT)        ((REG) & ((uint16_t)(BIT)))
@@ -271,13 +309,13 @@ typedef enum
 #define WRITE_REG16(REG, VAL)           ((REG) = ((uint16_t)(VAL)))
 #define WRITE_REG32(REG, VAL)           ((REG) = ((uint32_t)(VAL)))
 
-#define READ_REG8(REG)                  ((uint8_t)(REG))
-#define READ_REG16(REG)                 ((uint16_t)(REG))
-#define READ_REG32(REG)                 ((uint32_t)(REG))
+#define READ_REG8(REG)                  (REG)
+#define READ_REG16(REG)                 (REG)
+#define READ_REG32(REG)                 (REG)
 
-#define MODIFY_REG8(REGS, CLEARMASK, SETMASK)   (WRITE_REG8((REGS), (((READ_REG8((REGS))) & ((uint8_t)(~(CLEARMASK)))) | ((uint8_t)(SETMASK)))))
-#define MODIFY_REG16(REGS, CLEARMASK, SETMASK)  (WRITE_REG16((REGS), (((READ_REG16((REGS))) & ((uint16_t)(~(CLEARMASK)))) | ((uint16_t)(SETMASK)))))
-#define MODIFY_REG32(REGS, CLEARMASK, SETMASK)  (WRITE_REG32((REGS), (((READ_REG32((REGS))) & ((uint32_t)(~(CLEARMASK)))) | ((uint32_t)(SETMASK)))))
+#define MODIFY_REG8(REGS, CLEARMASK, SETMASK)   (WRITE_REG8((REGS), (((READ_REG8((REGS))) & ((uint8_t)(~((uint8_t)(CLEARMASK))))) | ((uint8_t)(SETMASK) & (uint8_t)(CLEARMASK)))))
+#define MODIFY_REG16(REGS, CLEARMASK, SETMASK)  (WRITE_REG16((REGS), (((READ_REG16((REGS))) & ((uint16_t)(~((uint16_t)(CLEARMASK))))) | ((uint16_t)(SETMASK) & (uint16_t)(CLEARMASK)))))
+#define MODIFY_REG32(REGS, CLEARMASK, SETMASK)  (WRITE_REG32((REGS), (((READ_REG32((REGS))) & ((uint32_t)(~((uint32_t)(CLEARMASK))))) | ((uint32_t)(SETMASK) & (uint32_t)(CLEARMASK)))))
 /**
  * @}
  */

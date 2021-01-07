@@ -7,6 +7,8 @@
    Date             Author          Notes
    2019-07-03       Hongjh          First version
    2020-07-27       Hongjh          Correct the macro define:IS_CTC_OFFSET_VAL.
+   2020-08-31       Hongjh          Correct the macro define:IS_CTC_TOLERANCE_BIAS.
+   2020-10-30       Hongjh          Modify for refining CTC initialization structure.
  @endverbatim
  *******************************************************************************
  * Copyright (C) 2016, Huada Semiconductor Co., Ltd. All rights reserved.
@@ -88,27 +90,14 @@
  */
 #define IS_CTC_FREF(x)                          ((x) <= 25000000UL)  /* 25MHz */
 
-#define IS_CTC_FHRC(x)                                                         \
-(   (CTC_TRIMMING_HRC_1MHZ == (x))              ||                             \
-    (CTC_TRIMMING_HRC_2MHZ == (x))              ||                             \
-    (CTC_TRIMMING_HRC_3MHZ == (x))              ||                             \
-    (CTC_TRIMMING_HRC_4MHZ == (x))              ||                             \
-    (CTC_TRIMMING_HRC_6MHZ == (x))              ||                             \
-    (CTC_TRIMMING_HRC_8MHZ == (x))              ||                             \
-    (CTC_TRIMMING_HRC_12MHZ == (x))             ||                             \
-    (CTC_TRIMMING_HRC_16MHZ == (x))             ||                             \
-    (CTC_TRIMMING_HRC_24MHZ == (x))             ||                             \
-    (CTC_TRIMMING_HRC_32MHZ == (x))             ||                             \
-    (CTC_TRIMMING_HRC_48MHZ == (x))             ||                             \
-    (CTC_TRIMMING_HRC_1P5MHZ == (x)))
-
 #define IS_CTC_OFFSET_VAL(x)                    ((x) <= CTC_CR2_OFSVAL)
 
 #define IS_CTC_RELOAD_VAL(x)                    ((x) <= (CTC_CR2_RLDVAL >> CTC_CR2_RLDVAL_POS))
 
 #define IS_CTC_TRM_VAL(x)                       ((x) <= (CTC_CR1_TRMVAL >> CTC_CR1_TRMVAL_POS))
 
-#define IS_CTC_TOLERANCE_BIAS(x)                ((x) <= CTC_DEFAULT_TOLERANCE_BIAS)
+#define IS_CTC_TOLERANCE_BIAS(x)                ((x) >= 0.0f) &&               \
+                                                ((x) <= CTC_DEFAULT_TOLERANCE_BIAS)
 
 #define IS_CTC_FLAG(x)                                                         \
 (    (x) & (CTC_FLAG_TRMOK | CTC_FLAG_TRMOVF | CTC_FLAG_TRMUDF | CTC_FLAG_BUSY))
@@ -127,6 +116,16 @@
 (   (CTC_REFCLK_XTAL == (x))                    ||                             \
     (CTC_REFCLK_CTCREF == (x)))
 
+/**
+ * @}
+ */
+
+/**
+ * @defgroup CTC_Trim_HRC_Frequency CTC Trim HRC frequency
+ * @{
+ */
+#define CTC_TRIM_HRC_32M                (32000000ul)  /*!< CTC Trimming 32MHz */
+#define CTC_TRIM_HRC_48M                (48000000ul)  /*!< CTC Trimming 48MHz */
 /**
  * @}
  */
@@ -174,6 +173,8 @@ en_result_t CTC_Init(const stc_ctc_init_t *pstcInit)
     uint32_t u32RefclkDiv = 0ul;
     uint32_t u32Multiplier = 0ul;
     uint64_t u64InterRefclk = 0ul;
+    uint32_t u32HrcDiv;
+    uint32_t u32HrcFreq = CTC_TRIM_HRC_32M;
     en_result_t enRet = ErrorNotReady;
 
     /* Check CTC status */
@@ -185,12 +186,26 @@ en_result_t CTC_Init(const stc_ctc_init_t *pstcInit)
         if ((NULL != pstcInit) && (IS_CTC_FREF(pstcInit->u32Fref)))
         {
             /* Check parameters */
-            DDL_ASSERT(IS_CTC_FHRC(pstcInit->u32Fhrc));
             DDL_ASSERT(IS_CTC_FREF(pstcInit->u32Fref));
             DDL_ASSERT(IS_CTC_TRM_VAL(pstcInit->u32TrmVal));
             DDL_ASSERT(IS_CTC_REFCLK_SEL(pstcInit->u32RefClkSel));
             DDL_ASSERT(IS_CTC_TOLERANCE_BIAS(pstcInit->f32ToleranceBias));
             DDL_ASSERT(IS_CTC_REFCLK_PRESCALER_DIV(pstcInit->u32RefclkPrescaler));
+
+            if (READ_REG8_BIT(M0P_EFM->HRCCFGR, EFM_HRCCFGR_HRCFREQS_3) > 0U)
+            {
+                u32HrcFreq = CTC_TRIM_HRC_48M;
+            }
+
+            u32HrcDiv = (uint32_t)READ_REG8_BIT(M0P_EFM->HRCCFGR, (EFM_HRCCFGR_HRCFREQS_2|\
+                                                                   EFM_HRCCFGR_HRCFREQS_1|\
+                                                                   EFM_HRCCFGR_HRCFREQS_0));
+            if (u32HrcDiv > 5UL)
+            {
+                u32HrcDiv = 5UL;
+            }
+
+            u32HrcFreq >>= u32HrcDiv;
 
             if (pstcInit->u32RefclkPrescaler < CTC_REFCLK_PRESCALER_DIV128)
             {
@@ -200,7 +215,7 @@ en_result_t CTC_Init(const stc_ctc_init_t *pstcInit)
             {
                 u32RefclkDiv = (32ul << pstcInit->u32RefclkPrescaler);
             }
-            u64InterRefclk = ((uint64_t)(pstcInit->u32Fhrc)) * ((uint64_t)(u32RefclkDiv));
+            u64InterRefclk = ((uint64_t)u32HrcFreq) * ((uint64_t)(u32RefclkDiv));
             u32Multiplier = (uint32_t)(u64InterRefclk / pstcInit->u32Fref);
 
             /* Calculate offset value formula: OFSVAL = (Fhrc / (Fref * Fref_divsion)) * TA */
@@ -242,11 +257,11 @@ en_result_t CTC_StructInit(stc_ctc_init_t *pstcInit)
     /* Check parameters */
     if (NULL != pstcInit)
     {
-        pstcInit->u32Fhrc = 0ul;
         pstcInit->u32Fref = 0ul;
         pstcInit->u32RefClkSel = CTC_REFCLK_CTCREF;
         pstcInit->f32ToleranceBias = CTC_DEFAULT_TOLERANCE_BIAS;
         pstcInit->u32RefclkPrescaler = CTC_REFCLK_PRESCALER_DIV8;
+        pstcInit->u32TrmVal = 0ul;
         enRet = Ok;
     }
 

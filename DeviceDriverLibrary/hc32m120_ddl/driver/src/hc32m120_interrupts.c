@@ -9,6 +9,8 @@
    2019-06-21       Zhangxl         First version
    2020-01-22       Zhangxl         Modify exclusive IRQ request process for 
                                     share handler
+   2020-10-30       Zhangxl         Revise I2C TxEmpty & Complete Entry;
+                                    SPII flag judgment for share IRQ.
  @endverbatim
  *******************************************************************************
  * Copyright (C) 2016, Huada Semiconductor Co., Ltd. All rights reserved.
@@ -394,7 +396,7 @@ en_result_t NMI_StructInit(stc_nmi_config_t *pstcNmiConfig)
         /* Configure to default value */
         pstcNmiConfig->u8NmiFE          = NMI_FILTER_OFF;
         pstcNmiConfig->u8NmiFClk        = NMI_FCLK_HCLK_DIV1;
-        pstcNmiConfig->u8NmiTigger      = NMI_TRIGGER_FALLING;
+        pstcNmiConfig->u8NmiTrigger     = NMI_TRIGGER_FALLING;
         pstcNmiConfig->u8NmiSrc         = NMI_SRC_NMI_PIN;
         pstcNmiConfig->pfnNmiCallback   = NULL;
     }
@@ -422,7 +424,7 @@ en_result_t NMI_Init(const stc_nmi_config_t *pstcNmiConfig)
         /* Parameter validity checking */
         DDL_ASSERT(IS_NMI_FCLK(pstcNmiConfig->u8NmiFClk));
         DDL_ASSERT(IS_NMI_FE(pstcNmiConfig->u8NmiFE));
-        DDL_ASSERT(IS_NMI_TRIGGER(pstcNmiConfig->u8NmiTigger));
+        DDL_ASSERT(IS_NMI_TRIGGER(pstcNmiConfig->u8NmiTrigger));
         DDL_ASSERT(IS_NMI_SRC(pstcNmiConfig->u8NmiSrc));
 
         INTC_Unlock();
@@ -431,7 +433,7 @@ en_result_t NMI_Init(const stc_nmi_config_t *pstcNmiConfig)
         WRITE_REG8(M0P_INTC->NMICR,                                             \
                   (pstcNmiConfig->u8NmiFE         |                             \
                    pstcNmiConfig->u8NmiFClk       |                             \
-                   pstcNmiConfig->u8NmiTigger));
+                   pstcNmiConfig->u8NmiTrigger));
 
         /* Clear all NMI trigger source before set */
         WRITE_REG8(M0P_INTC->NMICLR, INTC_NMICLR_MASK);
@@ -539,28 +541,28 @@ en_result_t EXINT_Init(const stc_exint_config_t *pstcExIntConfig)
 }
 
 /**
- * @brief  Initialize ExInt. Fill each pstcExintConfig with default value
- * @param  [in] pstcExintConfig: Pointer to a pstcExintConfig structure
+ * @brief  Initialize ExInt. Fill each pstcExIntConfig with default value
+ * @param  [in] pstcExIntConfig: Pointer to a pstcExIntConfig structure
  *                              that contains configuration information.
  * @retval Ok: EXINT structure initialize successful
  *         ErrorInvalidParameter: NULL pointer
  */
-en_result_t EXINT_StructInit(stc_exint_config_t *pstcExintConfig)
+en_result_t EXINT_StructInit(stc_exint_config_t *pstcExIntConfig)
 {
     en_result_t enRet = Ok;
 
     /* Check if pointer is NULL */
-    if (NULL == pstcExintConfig)
+    if (NULL == pstcExIntConfig)
     {
         enRet = ErrorInvalidParameter;
     }
     else
     {
         /* Configure to default value */
-        pstcExintConfig->u16ExIntCh     = (uint16_t)0ul;
-        pstcExintConfig->u8ExIntFE      = EXINT_FILTER_OFF;
-        pstcExintConfig->u8ExIntFClk    = EXINT_FCLK_HCLK_DIV1;
-        pstcExintConfig->u8ExIntLvl     = EXINT_TRIGGER_FALLING;
+        pstcExIntConfig->u16ExIntCh     = (uint16_t)0ul;
+        pstcExIntConfig->u8ExIntFE      = EXINT_FILTER_OFF;
+        pstcExIntConfig->u8ExIntFClk    = EXINT_FCLK_HCLK_DIV1;
+        pstcExIntConfig->u8ExIntLvl     = EXINT_TRIGGER_FALLING;
     }
     return enRet;
 }
@@ -1247,17 +1249,17 @@ void IRQ028_Handler(void)
     {
         Usart3TxEmpt_IrqHandler();
     }
-    /* I2c Tx buffer empty */
-    u32Tmp1 = bM0P_I2C->SR_b.TEMPTYF;
-    u32Tmp2 = bM0P_I2C->CR2_b.TEMPTYIE;
+    /* I2c Tx end */
+    u32Tmp1 = bM0P_I2C->SR_b.TENDF;
+    u32Tmp2 = bM0P_I2C->CR2_b.TENDIE;
     if ((ISELBR28 & BIT_MASK_14) && (u32Tmp1) && (u32Tmp2))
     {
-        I2cTxEmpt_IrqHandler();
+        I2cTxEnd_IrqHandler();
     }
     /* SPI bus idle */
     u32Tmp1 = bM0P_SPI->SR_b.IDLNF;
     u32Tmp2 = bM0P_SPI->CR1_b.IDIE;
-    if ((ISELBR28 & BIT_MASK_15) && (u32Tmp1) && (u32Tmp2))
+    if ((ISELBR28 & BIT_MASK_15) && (0UL == u32Tmp1) && (u32Tmp2))
     {
         SpiIdle_IrqHandler();
     }
@@ -1385,12 +1387,12 @@ void IRQ030_Handler(void)
     {
         Usart2TxEmpt_IrqHandler();
     }
-    /* I2c Tx end */
-    u32Tmp1 = bM0P_I2C->SR_b.TENDF;
-    u32Tmp2 = bM0P_I2C->CR2_b.TENDIE;
+    /* I2c Tx buffer empty */
+    u32Tmp1 = bM0P_I2C->SR_b.TEMPTYF;
+    u32Tmp2 = bM0P_I2C->CR2_b.TEMPTYIE;
     if ((ISELBR30 & BIT_MASK_13) && (u32Tmp1) && (u32Tmp2))
     {
-        I2cTxEnd_IrqHandler();
+        I2cTxEmpt_IrqHandler();
     }
 }
 

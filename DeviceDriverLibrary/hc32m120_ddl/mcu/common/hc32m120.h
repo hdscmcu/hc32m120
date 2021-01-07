@@ -5,7 +5,7 @@
  @verbatim
    Change Logs:
    Date             Author          Notes
-   2020-08-27       chengy          First version
+   2020-11-19       chengy          First version
  @endverbatim
  *******************************************************************************
  * Copyright (C) 2017, Huada Semiconductor Co.,Ltd All rights reserved.
@@ -56,7 +56,7 @@
  **
  ** History:
  **
- **   - 2020-08-27  1.0   First version for Device Driver Library of HC32M120 series MCU.
+ **   - 2020-11-19  1.0   First version for Device Driver Library of HC32M120 series MCU.
  **
  ******************************************************************************/
 
@@ -202,7 +202,7 @@ typedef enum en_int_src
     INT_XTAL_STOP           = 6u,
     INT_SWDT_NMIUNDF        = 7u,
     INT_USART_1_EI          = 12u,
-    INT_IIC_EE1             = 13u,
+    INT_IIC_EEI             = 13u,
     INT_SPI_SPEI            = 14u,
     INT_PORT_EIRQ1          = 16u,
     INT_PORT_EIRQ9          = 17u,

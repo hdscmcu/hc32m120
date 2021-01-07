@@ -1,53 +1,73 @@
 version     date           comment
+ 1.1.0
+            Dec 15, 2020   1. Example uart_int: Fix bug of lossing TX data.
+
+            Dec 09, 2020   1. Correct timeout process for clk driver.
+
+            Dec 04, 2020   1. Refined examples spi_dma, spi_master_base, spi_self_diagnosis and spi_slave_interrupt.
+
+            Oct 30, 2020   1. Refine CTC initialization structure;
+                           2. Revise I2C TxEmpty & Complete Entry;
+                           3. SPII flag judgment for share IRQ;
+                           4. Use MODIFY instead of WRITE for GPIO_Init;
+                           5. Fixed SysTick_Delay function overflow handling.
+
+            Sep 16, 2020   1. Correct typo for USART sample;
+                           2. Revise debug port definition.
+
+            Sep 07, 2020   1. Optimizing the definition method of ICG field;
+                           2. Add the precompiled configuration of ARM compiler V6.
+
+            Aug 31, 2020   1. Correct macro define of CTC driver:IS_CTC_TOLERANCE_BIAS.
  1.0.0
             Aug 28,2020    1. Update headfile for i2c DTR and DRR register.
 
-            Jul 31, 2020   1. CLK Add func. CLK_GetXtalStdFlag().
-                                  Remove Enable from func. CLK_MCOConfig().
-                           2. DMA Eliminate impact on other bits in func. DMA_LlpInit().
-                           3. EFM Add wait RDY at start of func. EFM_SetOperateMode().
-                           4. Some typo in dma sample & pwc sample  
+            Jul 31, 2020   1. CLK Add func. CLK_GetXtalStdFlag();
+                                  Remove Enable from func. CLK_MCOConfig();
+                           2. DMA Eliminate impact on other bits in func. DMA_LlpInit();
+                           3. EFM Add wait RDY at start of func. EFM_SetOperateMode();
+                           4. Some typo in dma sample & pwc sample.
 
-            Jul 27, 2020   1. Correct macro define of CTC driver:IS_CTC_OFFSET_VAL
+            Jul 27, 2020   1. Correct macro define of CTC driver:IS_CTC_OFFSET_VAL.
 
-            Mar 14, 2020   1. Delete unused macro-define for EMB driver
+            Mar 14, 2020   1. Delete unused macro-define for EMB driver.
 
             Feb 28, 2020   1. Some typo in PWC/CLK
-                           2. Delete struct member u32HwFlowCtrl of stc_lin_init_t for USART driver
-                           3. Modify function comment: UsartGetSilenceModeState for USART sample
-                           4. Delete macro-defgroup USART_Interrupt_definition in hc32m120_usart.h files
-                           5. Modify interrupt macro define to USART_INT_TXE /USART_INT_TC/USART_INT_RX
-                           6. Use MODIFY_REG32,CLEAR_REG32_BIT,SET_REG32_BIT for drivers 
+                           2. Delete struct member u32HwFlowCtrl of stc_lin_init_t for USART driver;
+                           3. Modify function comment: UsartGetSilenceModeState for USART sample;
+                           4. Delete macro-defgroup USART_Interrupt_definition in hc32m120_usart.h files;
+                           5. Modify interrupt macro define to USART_INT_TXE /USART_INT_TC/USART_INT_RX;
+                           6. Use MODIFY_REG32,CLEAR_REG32_BIT,SET_REG32_BIT for drivers ;
                            7. Comment&API name revise for TIMER4_CNT_GetIntMaskTimes/
-                              TIMER4_CNT_GetIntMaskCurrentTimes API for Timer4.
-                           8. Merge hc32_common.h files of HC32F120, HC32F4A0, HC32M120, HC32M423 series chips.
+                              TIMER4_CNT_GetIntMaskCurrentTimes API for Timer4;
+                           8. Merge hc32_common.h files of HC32F120, HC32F4A0, HC32M120, HC32M423 series chips;
                            9. Delete history legacy register macro definition in hc32_common.h files.
 
-            Feb 14, 2020   1. Modify EFM_InterruptCmd function for efm.c.
-                           2. Replace the ddl_config.h for CRC.
-                           3. Use CLEAR_REG8_BIT for CLK_ClearXtalStdFlag() instead of CLEAR_REG8_BIT.
-                           4. Comment revise for dma/interrupt/startup.s.
-                           5. Modified register INTCLR1 to INTCLR0 in  function DMA_ClearErrFlag().
+            Feb 14, 2020   1. Modify EFM_InterruptCmd function for efm.c;
+                           2. Replace the ddl_config.h for CRC;
+                           3. Use CLEAR_REG8_BIT for CLK_ClearXtalStdFlag() instead of CLEAR_REG8_BIT;
+                           4. Comment revise for dma/interrupt/startup.s;
+                           5. Modified register INTCLR1 to INTCLR0 in  function DMA_ClearErrFlag();
                            6. Sync 'Compiler Macro Definitions' with other series.
 
             Jan 22, 2020   1. Modify exclusive IRQ request process for share handler
             
-            Jan 20, 2020   1. Modify the macro definition of CLEAR_REG.
+            Jan 20, 2020   1. Modify the macro definition of CLEAR_REG;
                            2. Add the macro definition of __UNUSED.
 
-            Jan 08, 2020   1. Added GCC compiler support.
-                           2. Added Eclipse project files for each example project.
-                           3. Modified the type of 'u32Event0' in structure stc_adc_trg_cfg_t,
-                              from 'uint32 enEvent0' to 'en_event_src_t enEvent0'. Same with 'u32Event1'.
+            Jan 08, 2020   1. Added GCC compiler support;
+                           2. Added Eclipse project files for each example project;
+                           3. Modified the type of 'u32Event0' in structure stc_adc_trg_cfg_t;
+                              from 'uint32 enEvent0' to 'en_event_src_t enEvent0'. Same with 'u32Event1';
                            4. Modified the definitions of ADC_Trigger_Source_Type.
 
-            Jan 03, 2020   1. comment revise for gpio driver
+            Jan 03, 2020   1. comment revise for gpio driver.
 
-            Dec 11, 2019   1. Add timeout function for timer0
+            Dec 11, 2019   1. Add timeout function for timer0.
 
-            Nov 04, 2019   1. TX empty interrupt IRQ callback disable TX empty interrupt 
-                               when buffer data is empty for UART interrupt sample.[usart];
+            Nov 04, 2019   1. TX empty interrupt IRQ callback disable TX empty interrupt
+                               when buffer data is empty for UART interrupt sample.
 
-            Oct 22, 2019   1. the first release for hc32m120 series DDL(Device Driver Library)
+            Oct 22, 2019   1. the first release for hc32m120 series DDL(Device Driver Library).
 
 EOF

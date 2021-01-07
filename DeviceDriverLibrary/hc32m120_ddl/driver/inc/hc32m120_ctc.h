@@ -7,6 +7,7 @@
    Change Logs:
    Date             Author          Notes
    2019-07-03       Hongjh          First version
+   2020-10-30       Hongjh          Refine CTC initialization structure.
  @endverbatim
  *******************************************************************************
  * Copyright (C) 2016, Huada Semiconductor Co., Ltd. All rights reserved.
@@ -90,9 +91,6 @@ extern "C"
  */
 typedef struct stc_ctc_init
 {
-    uint32_t u32Fhrc;               /*!< HRC clock frequency
-                                         This parameter can be a value of @ref CTC_Trimming_HRC_Frequency */
-
     uint32_t u32Fref;               /*!< Reference clock frequency */
 
     uint32_t u32RefClkSel;          /*!< Reference clock source selection

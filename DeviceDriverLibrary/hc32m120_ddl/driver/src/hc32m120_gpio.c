@@ -9,6 +9,7 @@
    2019-06-22       Zhangxl         First version
    2020-01-03       Zhangxl         Comment revise for SetFunc API
    2020-02-14       Zhangxl         Comment revise for GPIO_DeInit API
+   2020-10-30       Zhangxl         Use MODIFY instead of WRITE for GPIO_Init
  @endverbatim
  *******************************************************************************
  * Copyright (C) 2016, Huada Semiconductor Co., Ltd. All rights reserved.
@@ -228,7 +229,7 @@
  * @param  [in] u8Pin: GPIO_PIN_x, x can be (0~7) to select the PIN index
  * @param  [in] pstcGpioInit: Pointer to a stc_gpio_init_t structure that
  *                            contains configuration information.
- * @retval Ok: GPIO initilize successful
+ * @retval Ok: GPIO initialize successful
  *         ErrorInvalidParameter: NULL pointer
  */
 en_result_t GPIO_Init(uint8_t u8Port, uint8_t u8Pin, const stc_gpio_init_t *pstcGpioInit)
@@ -272,7 +273,10 @@ en_result_t GPIO_Init(uint8_t u8Port, uint8_t u8Pin, const stc_gpio_init_t *pstc
                             pstcGpioInit->u16Latch  | pstcGpioInit->u16PinDrv   |   \
                             pstcGpioInit->u16PinOType | pstcGpioInit->u16PinState | \
                             pstcGpioInit->u16PinMode;
-                WRITE_REG16(*PCRx, u16PCRVal);
+                MODIFY_REG16(*PCRx, (PORT_PCR_POUT | PORT_PCR_POUTE | PORT_PCR_NOD |\
+                                     PORT_PCR_DRV  | PORT_PCR_LTE   | PORT_PCR_PUU |\
+                                     PORT_PCR_INVE | PORT_PCR_CINSEL| PORT_PCR_INTE),\
+                                     u16PCRVal);
             }
         }
 
@@ -335,7 +339,7 @@ void GPIO_DeInit(void)
  * @brief  Initialize GPIO. Fill each pstcGpioInit with default value
  * @param  [in] pstcGpioInit: Pointer to a stc_gpio_init_t structure that
  *                            contains configuration information.
- * @retval Ok: GPIO structure initilize successful
+ * @retval Ok: GPIO structure initialize successful
  *         ErrorInvalidParameter: NULL pointer
  */
 en_result_t GPIO_StructInit(stc_gpio_init_t *pstcGpioInit)
@@ -624,8 +628,6 @@ void GPIO_ResetPins(uint8_t u8Port, uint8_t u8Pin)
  * @brief  Write specified GPIO data port
  * @param  [in] u8Port: GPIO_PORT_x, x can be (0~7, 12~14) to select the GPIO peripheral
  * @param  [in] u8PortVal: Pin output value
- *   @arg  PIN_STATE_RESET
- *   @arg  PIN_STATE_SET
  * @retval None
  */
 void GPIO_WritePort(uint8_t u8Port, uint8_t u8PortVal)
