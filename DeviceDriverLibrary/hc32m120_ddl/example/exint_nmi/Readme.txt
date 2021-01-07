@@ -41,7 +41,7 @@ STK_HC32M120_LQFP48_050_V11
 1）打开工程并重新编译；
 2）启动IDE的下载程序并运行；
 3）按下SW1（EXINT2）-->LED_G交替亮灭；按下SW2（EXINT1）-->LED_R交替亮灭；
-4）测试EXINT8的功能：给P74上升沿电平信号，LED_B交替亮灭；
+4）测试EXINT8的功能：给P147上升沿电平信号，LED_B交替亮灭；
 5）测试NMI引脚中断功能：按下NMI KEY（MODE），给P40（TOOL0）下降沿电平信号，LED_RGB交替亮灭
 
 
