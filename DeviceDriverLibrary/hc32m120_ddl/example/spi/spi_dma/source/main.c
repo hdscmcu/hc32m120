@@ -7,6 +7,7 @@
    Date             Author          Notes
    2019-07-10       Wuze            First version
    2019-10-21       Wuze            Modified DMA_ChannelCmd to DMA_ChannelEnable to enable the DMA channel.
+   2020-12-04       Wuze            Refined this example.
  @endverbatim
  *******************************************************************************
  * Copyright (C) 2016, Huada Semiconductor Co., Ltd. All rights reserved.
@@ -73,32 +74,16 @@
 /*******************************************************************************
  * Local pre-processor symbols/macros ('#define')
  ******************************************************************************/
-/* SPI pin group definition. */
-#define SPI_PIN_GROUP_A             (1u)
-#define SPI_PIN_GROUP_B             (2u)
-#define SPI_PIN_GROUP               (SPI_PIN_GROUP_A)
 
-#if (SPI_PIN_GROUP == SPI_PIN_GROUP_A)
+/* SPI pin definition. */
 #define SPI_NSS_PORT                (GPIO_PORT_1)
 #define SPI_NSS_PIN                 (GPIO_PIN_3)
 #define SPI_SCK_PORT                (GPIO_PORT_1)
 #define SPI_SCK_PIN                 (GPIO_PIN_4)
-#define SPI_MOSI_PORT               (GPIO_PORT_1)
-#define SPI_MOSI_PIN                (GPIO_PIN_1)
-#define SPI_MISO_PORT               (GPIO_PORT_1)
-#define SPI_MISO_PIN                (GPIO_PIN_2)
-#elif (SPI_PIN_GROUP == SPI_PIN_GROUP_B)
-#define SPI_NSS_PORT                (GPIO_PORT_2)
-#define SPI_NSS_PIN                 (GPIO_PIN_2)
-#define SPI_SCK_PORT                (GPIO_PORT_2)
-#define SPI_SCK_PIN                 (GPIO_PIN_3)
 #define SPI_MOSI_PORT               (GPIO_PORT_2)
 #define SPI_MOSI_PIN                (GPIO_PIN_0)
-#define SPI_MISO_PORT               (GPIO_PORT_2)
-#define SPI_MISO_PIN                (GPIO_PIN_1)
-#else
-#error "SPI pin group not exists."
-#endif // #if (SPI_PIN_GROUP == SPI_PIN_GROUP_A)
+#define SPI_MISO_PORT               (GPIO_PORT_1)
+#define SPI_MISO_PIN                (GPIO_PIN_2)
 
 /* SPI wire mode definition. */
 #define SPI_APP_3_WIRE              (3u)
@@ -157,16 +142,19 @@
  ******************************************************************************/
 static void SystemClockConfig(void);
 static void DmaConfig(void);
+static void DmaIrqConfig(void);
 static void SpiConfig(void);
 static void SpiIrqConfig(void);
 
 /*******************************************************************************
  * Local variable definitions ('static')
  ******************************************************************************/
-static uint8_t m_au8SpiRxBuf[SPI_BUFFER_LENGTH];    /*!< All of the data is valid. */
-static uint8_t m_au8SpiTxBuf[SPI_BUFFER_LENGTH] =   /*!< Valid data starts at offset 2 and length is SPI_BUFFER_LENGTH-2. */
+static uint8_t u8RxFlag = 0U;
+
+static uint8_t m_au8SpiRxBuf[SPI_BUFFER_LENGTH];
+static uint8_t m_au8SpiTxBuf[SPI_BUFFER_LENGTH] = \
 {
-    SPI_DUMMY_DATA, SPI_DUMMY_DATA, 0x10, 0x20, 0x30, 0x40, 0x50, 0x60
+    0x10, 0x20, 0x30, 0x40, 0x50, 0x60, 0x70, 0x80
 };
 static stc_dma_llp_descriptor_t m_stcLlpDescTx;
 static stc_dma_llp_descriptor_t m_stcLlpDescRx;
@@ -199,9 +187,10 @@ int32_t main(void)
 
     while (1u)
     {
-        if (DMA_GetCplFlag(SPI_DMA_RX_CH, DMA_FLAG_TC) == Set)
+        if (u8RxFlag != 0u)
         {
-            DMA_ClearCplFlag(SPI_DMA_RX_CH, DMA_FLAG_TC);
+            u8RxFlag = 0u;
+
             if (m_au8SpiRxBuf[0u] == SPI_WRITE_SLAVE)
             {
                 // TODO: Use the data from the master.
@@ -209,8 +198,9 @@ int32_t main(void)
 
             if (m_au8SpiRxBuf[0u] == SPI_READ_SLAVE)
             {
-                /* Prepare data that needs to be sent to the master.
-                   Valid data starts at offset 2 and length is SPI_BUFFER_LENGTH-2. */
+                /* Prepare data that needs to be sent to the master. */
+                m_au8SpiTxBuf[0u]++;
+                m_au8SpiTxBuf[1u]++;
                 m_au8SpiTxBuf[2u]++;
                 m_au8SpiTxBuf[3u]++;
                 m_au8SpiTxBuf[4u]++;
@@ -218,6 +208,10 @@ int32_t main(void)
                 m_au8SpiTxBuf[6u]++;
                 m_au8SpiTxBuf[7u]++;
             }
+
+            SPI_FunctionCmd(Disable);
+            DMA_ChannelEnable(SPI_DMA_TX_CH);
+            SPI_FunctionCmd(Enable);
         }
     }
 }
@@ -298,12 +292,66 @@ void DmaConfig(void)
     DMA_ClearCplFlag(SPI_DMA_RX_CH, DMA_FLAG_TC);
     DMA_ClearCplFlag(SPI_DMA_TX_CH, DMA_FLAG_TC);
 
+    DmaIrqConfig();
+
     /* Enable DMA channel. */
     DMA_ChannelEnable(SPI_DMA_RX_CH);
     DMA_ChannelEnable(SPI_DMA_TX_CH);
 
     /* Enable DMA. */
     DMA_Cmd(Enable);
+}
+
+/**
+ * @brief  Interrupt configuration.
+ * @param  None
+ * @retval None
+ */
+static void DmaIrqConfig(void)
+{
+    stc_irq_regi_config_t stcIrqRegiConf;
+
+    /* Configures error interrupt. */
+    stcIrqRegiConf.enIntSrc    = INT_DAM_1_TC0;
+    stcIrqRegiConf.enIRQn      = Int009_IRQn;
+    stcIrqRegiConf.pfnCallback = &DmaTc0_IrqHandler;
+    INTC_IrqRegistration(&stcIrqRegiConf);
+    NVIC_ClearPendingIRQ(stcIrqRegiConf.enIRQn);
+    NVIC_SetPriority(stcIrqRegiConf.enIRQn, DDL_IRQ_PRIORITY_03);
+    NVIC_EnableIRQ(stcIrqRegiConf.enIRQn);
+
+    stcIrqRegiConf.enIntSrc    = INT_DAM_2_TC0;
+    stcIrqRegiConf.enIRQn      = Int010_IRQn;
+    stcIrqRegiConf.pfnCallback = &DmaTc1_IrqHandler;
+    INTC_IrqRegistration(&stcIrqRegiConf);
+    NVIC_ClearPendingIRQ(stcIrqRegiConf.enIRQn);
+    NVIC_SetPriority(stcIrqRegiConf.enIRQn, DDL_IRQ_PRIORITY_03);
+    NVIC_EnableIRQ(stcIrqRegiConf.enIRQn);
+
+    DMA_CplIrqCmd(SPI_DMA_RX_CH, DMA_IRQ_TC, Enable);
+    DMA_CplIrqCmd(SPI_DMA_TX_CH, DMA_IRQ_TC, Enable);
+}
+
+/**
+ * @brief  DMA TC0 IRQ handler.
+ * @param  None
+ * @retval None
+ */
+void DmaTc0_IrqHandler(void)
+{
+    DMA_ClearCplFlag(SPI_DMA_RX_CH, DMA_FLAG_TC);
+    u8RxFlag = 1u;
+}
+
+/**
+ * @brief  DMA TC1 IRQ handler.
+ * @param  None
+ * @retval None
+ */
+void DmaTc1_IrqHandler(void)
+{
+    DMA_ChannelDisable(SPI_DMA_TX_CH);
+    DMA_ClearCplFlag(SPI_DMA_TX_CH, DMA_FLAG_TC);
 }
 
 /**
@@ -320,10 +368,10 @@ static void SpiConfig(void)
     SPI_StructInit(&stcInit);
 
     /* User configuration value. */
-    stcInit.u32MasterSlave       = SPI_SLAVE;
-    stcInit.u32WireMode          = SPI_WIRE_MODE;
-    stcInit.u32NssActiveLevel    = SPI_NSS_ACTIVE;
-    stcInit.u32SpiMode           = SPI_SPI_MODE;
+    stcInit.u32MasterSlave    = SPI_SLAVE;
+    stcInit.u32WireMode       = SPI_WIRE_MODE;
+    stcInit.u32NssActiveLevel = SPI_NSS_ACTIVE;
+    stcInit.u32SpiMode        = SPI_SPI_MODE;
 
     /* The SPI register can be written only after the SPI peripheral is enabled. */
     CLK_FcgPeriphClockCmd(CLK_FCG_SPI, Enable);

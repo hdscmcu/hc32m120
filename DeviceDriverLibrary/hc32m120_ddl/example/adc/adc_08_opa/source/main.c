@@ -6,6 +6,7 @@
    Change Logs:
    Date             Author          Notes
    2019-06-18       Wuze            First version
+   2021-01-07       Wuze            Fixed a bug of function AdcOpaConfig().
  @endverbatim
  *******************************************************************************
  * Copyright (C) 2016, Huada Semiconductor Co., Ltd. All rights reserved.
@@ -414,7 +415,7 @@ static void AdcOpaConfig(void)
 {
 #if (OPA_WORK_MODE == OPA_INDEPENDENT)
     /* 1. Enable ADC peripheral. */
-    ENABLE_ADC();
+    CLK_FcgPeriphClockCmd(CLK_FCG_ADC, Enable);
 #endif
 
     /* 2. Set the function of OPAP, OPAO and OPAM. */
@@ -428,7 +429,7 @@ static void AdcOpaConfig(void)
 
     /* 3. Enable OPA. */
     ADC_OpaCmd(ADC_OPA_1, Enable);
-    ADC_OpaCmd(ADC_OPA_2, Enable); 
+    ADC_OpaCmd(ADC_OPA_2, Enable);
 }
 
 /**

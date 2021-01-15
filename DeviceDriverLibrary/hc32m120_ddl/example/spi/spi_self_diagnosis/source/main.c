@@ -6,6 +6,7 @@
    Change Logs:
    Date             Author          Notes
    2019-06-06       Wuze            First version
+   2020-12-04       Wuze            Refined this example.
  @endverbatim
  *******************************************************************************
  * Copyright (C) 2016, Huada Semiconductor Co., Ltd. All rights reserved.
@@ -72,32 +73,15 @@
 /*******************************************************************************
  * Local pre-processor symbols/macros ('#define')
  ******************************************************************************/
-/* SPI pin group definition. */
-#define SPI_PIN_GROUP_A             (1u)
-#define SPI_PIN_GROUP_B             (2u)
-#define SPI_PIN_GROUP               (SPI_PIN_GROUP_B)
-
-#if (SPI_PIN_GROUP == SPI_PIN_GROUP_A)
+/* SPI pin definition. */
 #define SPI_NSS_PORT                (GPIO_PORT_1)
 #define SPI_NSS_PIN                 (GPIO_PIN_3)
 #define SPI_SCK_PORT                (GPIO_PORT_1)
 #define SPI_SCK_PIN                 (GPIO_PIN_4)
-#define SPI_MOSI_PORT               (GPIO_PORT_1)
-#define SPI_MOSI_PIN                (GPIO_PIN_1)
-#define SPI_MISO_PORT               (GPIO_PORT_1)
-#define SPI_MISO_PIN                (GPIO_PIN_2)
-#elif (SPI_PIN_GROUP == SPI_PIN_GROUP_B)
-#define SPI_NSS_PORT                (GPIO_PORT_2)
-#define SPI_NSS_PIN                 (GPIO_PIN_2)
-#define SPI_SCK_PORT                (GPIO_PORT_2)
-#define SPI_SCK_PIN                 (GPIO_PIN_3)
 #define SPI_MOSI_PORT               (GPIO_PORT_2)
 #define SPI_MOSI_PIN                (GPIO_PIN_0)
-#define SPI_MISO_PORT               (GPIO_PORT_2)
-#define SPI_MISO_PIN                (GPIO_PIN_1)
-#else
-#error "SPI pin group not exists."
-#endif // #if (SPI_PIN_GROUP == SPI_PIN_GROUP_A)
+#define SPI_MISO_PORT               (GPIO_PORT_1)
+#define SPI_MISO_PIN                (GPIO_PIN_2)
 
 /* Interrupt flag bit mask. */
 #define SPI_IRQ_PARITY_ERROR_OCCURRED   (1ul << 0u)

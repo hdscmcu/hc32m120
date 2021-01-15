@@ -100,9 +100,6 @@
 /* CTC reference clock freqency */
 #define CTC_TRIMMING_REFCLK_FREQ        (20000000ul)   /* 20MHz */
 
-/* Internal high speed RC freqency */
-#define CTC_TRIMMING_HRC_FREQ           (CTC_TRIMMING_HRC_48MHZ)
-
 /* Function clock gate definition  */
 #define FUNCTION_CLK_GATE               (CLK_FCG_CTC)
 
@@ -205,7 +202,6 @@ int32_t main(void)
     uint8_t TrimmingTrmVal;
     stc_irq_regi_config_t stcIrqRegiConf;
     stc_ctc_init_t stcCtcInit = {
-        .u32Fhrc = CTC_TRIMMING_HRC_FREQ,
         .u32Fref = CTC_TRIMMING_REFCLK_FREQ,
         .u32RefClkSel = CTC_REFCLK_SOURCE,
         .u32RefclkPrescaler = CTC_REFCLK_PRESCALER_DIV4096,

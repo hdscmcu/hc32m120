@@ -158,7 +158,7 @@ typedef struct
 
 /* Ring buffer size */
 #define RING_BUFFER_SIZE                (50u)
-#define IS_RING_BUFFER_EMPYT(x)         (0u == ((x)->u16UsedSize))
+#define IS_RING_BUFFER_EMPTY(x)         (0u == ((x)->u16UsedSize))
 
 /*******************************************************************************
  * Global variable definitions (declared in header file with 'extern')
@@ -289,7 +289,7 @@ static void UartTxIrqCallback(void)
             USART_SendData(UART_UNIT, (uint16_t)u8Data);
         }
 
-        if (IS_RING_BUFFER_EMPYT(&m_stcRingBuf))
+        if (IS_RING_BUFFER_EMPTY(&m_stcRingBuf))
         {
             USART_FuncCmd(UART_UNIT, USART_INT_TXE, Disable);
             USART_FuncCmd(UART_UNIT, USART_INT_TC, Enable);
@@ -536,7 +536,7 @@ int32_t main(void)
 
         USART_FuncCmd(UART_UNIT, (USART_TX | USART_INT_TXE), Enable);
 
-        while (IS_RING_BUFFER_EMPYT(&m_stcRingBuf))
+        while (IS_RING_BUFFER_EMPTY(&m_stcRingBuf))
         {
             ;
         }

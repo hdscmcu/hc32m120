@@ -86,7 +86,7 @@ extern "C"
  * @brief HC32 Series Device Driver Library version number v1.0.0
  */
 #define HC32_DDL_VERSION_MAIN           0x01u  /*!< [31:24] main version */
-#define HC32_DDL_VERSION_SUB1           0x00u  /*!< [23:16] sub1 version */
+#define HC32_DDL_VERSION_SUB1           0x01u  /*!< [23:16] sub1 version */
 #define HC32_DDL_VERSION_SUB2           0x00u  /*!< [15:8]  sub2 version */
 #define HC32_DDL_VERSION_RC             0x00u  /*!< [7:0]   release candidate */
 #define HC32_DDL_VERSION                ((HC32_DDL_VERSION_MAIN << 24) | \

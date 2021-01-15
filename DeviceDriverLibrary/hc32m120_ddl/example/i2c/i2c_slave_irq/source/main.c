@@ -7,6 +7,7 @@
    Date             Author          Notes
    2019-07-09       Wangmin         First version
    2020-02-28       Wangmin         Fix warning for GCC
+   2021-01-07       Heqb            Replace INT_IIC_EE1 with INT_IIC_EEI.
  @endverbatim
  *******************************************************************************
  * Copyright (C) 2016, Huada Semiconductor Co., Ltd. All rights reserved.
@@ -100,7 +101,7 @@
 
 /* I2C interrupt source and number define */
 #define I2C_EEI_IRQn                    (Int008_IRQn)
-#define I2C_EEI_SOURCE                  (INT_IIC_EE1)
+#define I2C_EEI_SOURCE                  (INT_IIC_EEI)
 #define I2C_TXI_IRQn                    (Int020_IRQn)
 #define I2C_TXI_SOURCE                  (INT_IIC_TXI)
 #define I2C_RXI_IRQn                    (Int018_IRQn)

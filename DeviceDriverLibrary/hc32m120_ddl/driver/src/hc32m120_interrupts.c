@@ -11,6 +11,7 @@
                                     share handler
    2020-10-30       Zhangxl         Revise I2C TxEmpty & Complete Entry;
                                     SPII flag judgment for share IRQ.
+   2021-01-14       Zhangxl         Add IrqResign API.      
  @endverbatim
  *******************************************************************************
  * Copyright (C) 2016, Huada Semiconductor Co., Ltd. All rights reserved.
@@ -259,6 +260,34 @@ en_result_t INTC_IrqRegistration(const stc_irq_regi_config_t *pstcIrqRegiConfig)
                 INTC_Lock();
             }
         }
+    }
+    return enRet;
+}
+
+/**
+ * @brief  IRQ resign function
+ * @param  [in] enIRQn: can be any value from INT008_IRQn ~ INT023_IRQn @ref IRQn_Type
+ * @retval Ok: IRQ resign successfully
+ *         ErrorInvalidParameter: IRQ No. is out of range
+ */
+en_result_t INTC_IrqResign(IRQn_Type enIRQn)
+{
+    __IO stc_intc_iselar_field_t *stcIntSel;
+    en_result_t enRet = Ok;
+
+    if ((enIRQn < Int008_IRQn) || (enIRQn > Int023_IRQn))
+    {
+        enRet = ErrorInvalidParameter;
+    }
+    else
+    {
+        INTC_Unlock();
+        stcIntSel = (stc_intc_iselar_field_t *)((uint32_t)(&M0P_INTC->ISELAR8) +        \
+                                                     (4u * ((uint32_t)enIRQn - 8u)));
+        stcIntSel->ISEL = 0u;
+        pfnIrqHandler[(uint32_t)enIRQn - 8U] = NULL;
+
+        INTC_Lock();
     }
     return enRet;
 }

@@ -392,7 +392,7 @@ __STATIC_INLINE void INTC_Unlock(void)
 }
 
 en_result_t INTC_IrqRegistration(const stc_irq_regi_config_t *pstcIrqRegiConfig);
-void INTC_IrqResign(IRQn_Type enIRQn);
+en_result_t INTC_IrqResign(IRQn_Type enIRQn);
 en_result_t INTC_ShareIrqCmd(en_int_src_t enIntSrc, en_functional_state_t enNewState);
 void INTC_WakeupSrcCmd(uint32_t u32WakeupSrc, en_functional_state_t enNewState);
 void INTC_EventCmd(uint8_t u8Event, en_functional_state_t enNewState);

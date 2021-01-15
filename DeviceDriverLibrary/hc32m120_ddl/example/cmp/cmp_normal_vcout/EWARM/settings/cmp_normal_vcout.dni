@@ -34,4 +34,4 @@ DisableInterrupts=0
 LeaveRunning=0
 MultiCoreRunAll=0
 [ArmDriver]
-EnableCache=1
+EnableCache=0

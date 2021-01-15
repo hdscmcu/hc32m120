@@ -270,7 +270,7 @@ int32_t main(void)
     NMI_StructInit(&stcNmiInit);
     stcNmiInit.u8NmiFE          = NMI_FILTER_ON;
     stcNmiInit.u8NmiFClk        = NMI_FCLK_HCLK_DIV64;
-    stcNmiInit.u8NmiTigger      = NMI_TRIGGER_RISING;
+    stcNmiInit.u8NmiTrigger     = NMI_TRIGGER_RISING;
     stcNmiInit.u8NmiSrc         = NMI_SRC_NMI_PIN;
     stcNmiInit.pfnNmiCallback   = &NMI_IrqCallback;
     NMI_Init(&stcNmiInit);
